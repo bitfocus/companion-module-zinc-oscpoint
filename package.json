@@ -11,7 +11,8 @@
 		"url": "git+https://github.com/bitfocus/companion-module-zinc-oscpoint.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.5.1"
+		"@companion-module/base": "~1.5.1",
+		"osc": "^2.4.3"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^1.4.1"
