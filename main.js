@@ -3,7 +3,8 @@ const UpgradeScripts = require('./upgrades')
 const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
 const UpdateVariableDefinitions = require('./variables')
-const osc = require('osc')
+const oscListener = require('./osc-listener');
+
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -18,44 +19,42 @@ class ModuleInstance extends InstanceBase {
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
-		this.connect();
+		oscListener.connect(this);
+
+		//set some defaults for the variables
+		this.setVariableValues({
+			presentationName: "None",
+			slideCount: 0,
+			state: 'edit',
+			currentSlide: 0,
+			buildPosition: 0,
+			buildCount: 0,
+			buildsRemaining: 0,
+			sectionIndex: 0,
+			sectionName: "None",
+			notes: " ",
+			mediaState: "stopped",
+			mediaDuration: 0,
+			mediaDurationFormatted: "00:00",
+			mediaPosition: 0,
+			mediaPositionFormatted: "00:00",
+			mediaRemaining: 0,
+			mediaRemainingFormatted: "00:00",
+		});
 
 	}
 	// When module gets deleted
 	async destroy() {
-		if (this.udpPort) this.udpPort.close();
+		oscListener.close();
 		//this.log('debug', 'destroy')
 	}
 
-	async connect() {
-		this.udpPort = new osc.UDPPort({
-			localAddress: '0.0.0.0',
-			localPort: this.config.localport,
-			metadata: true,
-		});
-		this.udpPort.on('message', (oscMsg) => {
-			this.processData(oscMsg)
-		})
-
-		this.udpPort.on('error', (err) => {
-			if (err.code === 'EADDRINUSE') {
-				this.log('error', 'Error: Selected port in use.' + err.message)
-			}
-		})
-
-		// Open the socket.
-		this.udpPort.open();
-
-		this.udpPort.on('ready', () => {
-			this.log('info', `Listening to OSCPoint on port: ${this.config.localport}`)
-		});
-	}
 
 	async configUpdated(config) {
 		this.log('info', 'Config has changed, updating...')
 		this.config = config
-		if (this.udpPort) this.udpPort.close();
-		this.connect();
+		await oscListener.close();
+		oscListener.connect(this);
 	}
 
 	// Return config fields for web config
