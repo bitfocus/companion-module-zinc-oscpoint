@@ -101,12 +101,21 @@ module.exports = function (self) {
 			name: `Show state`, 
 			style: {
 				text: "Show state:\n$(OSCPoint:state)",
-				size: '18',
-				color: combineRgb(255,255,255),
-				bgcolor: combineRgb(0,0,0),
+				size: '14',
+				color: combineRgb(0,0,0),
+				bgcolor: combineRgb(0,200,0),
 			},
 			steps: [],
-			feedbacks: [], 
+			feedbacks: [{
+				feedbackId: 'showState',
+				options: {
+					state: 'slideshow',
+				},
+				style: {
+					color: combineRgb(0,0,0),
+					bgcolor: combineRgb(255, 0, 0),
+				},
+			},], 
 		},
 		presentationName: {
 			type: 'button', 
@@ -219,11 +228,20 @@ module.exports = function (self) {
 			style: {
 				text: `Media state:\n$(OSCPoint:mediaState)`,
 				size: '14',
-				color: combineRgb(255,255,255),
-				bgcolor: combineRgb(0,0,0),
+				color: combineRgb(0,0,0),
+				bgcolor: combineRgb(0,200,0),
 			},
 			steps: [],
-			feedbacks: [], 
+			feedbacks: [{
+				feedbackId: 'mediaState',
+				options: {
+					state: 'playing',
+				},
+				style: {
+					color: combineRgb(0,0,0),
+					bgcolor: combineRgb(255, 0, 0),
+				},
+			},], 
 		},
 		mediaPosition: {
 			type: 'button', 

@@ -8,7 +8,6 @@ const oscListener = {
     mediaPosition: 0,
     mediaRemaining: 0,
     connect: async function (self) {
-        console.log("Connecting to OSCPoint")
         this.udpPort = new osc.UDPPort({
             localAddress: '0.0.0.0',
             localPort: self.config.localport,
@@ -21,6 +20,7 @@ const oscListener = {
             self.log('info', `Listening to OSCPoint on port: ${self.config.localport}`)
 
             //send a refresh request to OSCPoint
+            self.log('info', `Requesting feedback update using OSC /oscpoint/feedbacks/refresh`)
             self.oscSend(self.config.remotehost, self.config.remoteport, `/oscpoint/feedbacks/refresh`, []);
         });
 
@@ -37,11 +37,10 @@ const oscListener = {
     },
 
     processData: function (oscMsg, self) {
-        console.log(oscMsg.address);
+        self.log('debug', `OSC message received: ${oscMsg.address} ${oscMsg.args[0].value}`);
         const msgParts = oscMsg.address.split('/');
         if (msgParts[1] != 'oscpoint') return;
         const feedbackId = oscMsg.address.substring(9);
-        //console.log(feedbackId);
 
         switch (feedbackId) {
             case `/presentation/name`:
@@ -52,8 +51,8 @@ const oscListener = {
                 self.setVariableValues({ slideCount: oscMsg.args[0].value });
                 break;
             case `/slideshow/state`:
-                console.log(oscMsg.args[0].value);
                 self.setVariableValues({ state: oscMsg.args[0].value });
+                self.checkFeedbacks('showState');
                 break;
             case `/slideshow/currentslide`:
                 self.setVariableValues({ currentSlide: oscMsg.args[0].value });
@@ -75,7 +74,7 @@ const oscListener = {
                 self.setVariableValues({ sectionName: sectionName });
                 break;
             case `/slideshow/notes`:
-                let ns = oscMsg.args[0].value == "" ? "(none)" : `${oscMsg.args[0].value.substr(0,20)}...`;
+                let ns = oscMsg.args[0].value == "" ? "(none)" : `${oscMsg.args[0].value.substr(0, 20)}...`;
                 let notes = oscMsg.args[0].value == "" ? "(none)" : oscMsg.args[0].value;
                 self.setVariableValues({
                     notes: notes,
@@ -84,6 +83,7 @@ const oscListener = {
                 break;
             case `/slideshow/media/state`:
                 self.setVariableValues({ mediaState: oscMsg.args[0].value });
+                self.checkFeedbacks('mediaState');
                 break;
 
             //these three always come together, and mainly in this order, so we can risk batching the variable updates.
@@ -105,7 +105,7 @@ const oscListener = {
                 });
                 break;
             default:
-                console.log(`No action found for OSC ${oscMsg.address}`);
+                self.log('debug', `No action found for OSC ${oscMsg.address}`);
                 break;
         }
 

@@ -14,7 +14,7 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
-
+		this.log('info',`Sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`);
 		this.updateStatus(InstanceStatus.Ok)
 
 		this.updateActions() // export actions
@@ -26,23 +26,23 @@ class ModuleInstance extends InstanceBase {
 		//set some defaults for the variables
 		this.setVariableValues({
 			presentationName: "(none)",
-			slideCount: 0,
+			slideCount: '-',
 			state: 'edit',
-			currentSlide: 0,
-			buildPosition: 0,
-			buildCount: 0,
-			buildsRemaining: 0,
-			sectionIndex: 0,
+			currentSlide: '-',
+			buildPosition: '-',
+			buildCount: '-',
+			buildsRemaining: '-',
+			sectionIndex: '-',
 			sectionName: "(none)",
 			notes: "",
 			notesSnip: "(none)",
 			mediaState: "stopped",
 			mediaDuration: 0,
-			mediaDurationFormatted: "00:00",
+			mediaDurationFormatted: "--:--",
 			mediaPosition: 0,
-			mediaPositionFormatted: "00:00",
+			mediaPositionFormatted: "--:--",
 			mediaRemaining: 0,
-			mediaRemainingFormatted: "00:00",
+			mediaRemainingFormatted: "--:--",
 		});
 
 	}
@@ -55,6 +55,7 @@ class ModuleInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.log('info', 'Config has changed, updating...')
 		this.config = config
+		this.log('info',`Now sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`);
 		await oscListener.close();
 		oscListener.connect(this);
 	}

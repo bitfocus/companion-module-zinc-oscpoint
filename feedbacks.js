@@ -2,27 +2,58 @@ const { combineRgb } = require('@companion-module/base')
 
 module.exports = async function (self) {
 	self.setFeedbackDefinitions({
-		ChannelState: {
-			name: 'Example Feedback',
+		showState: {
+			name: 'Show state feedback',
 			type: 'boolean',
-			label: 'Channel State',
+			label: 'Show state',
 			defaultStyle: {
 				bgcolor: combineRgb(255, 0, 0),
 				color: combineRgb(0, 0, 0),
 			},
 			options: [
 				{
-					id: 'num',
-					type: 'number',
-					label: 'Test',
-					default: 5,
-					min: 0,
-					max: 10,
+					id: 'state',
+					type: 'dropdown',
+					label: 'State',
+					choices: [
+						{ id: 'slideshow', label: 'Slide show' },
+						{ id: 'edit', label: 'Edit' },
+					],
+					default: 'slideshow'
 				},
 			],
 			callback: (feedback) => {
-				console.log('Hello world!', feedback.options.num)
-				if (feedback.options.num > 5) {
+				if (self.getVariableValue('state') == feedback.options.state) {
+					return true
+				} else {
+					return false
+				}
+			},
+		},
+		mediaState: {
+			name: 'Media state feedback',
+			type: 'boolean',
+			label: 'Media state',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [
+				{
+					id: 'state',
+					type: 'dropdown',
+					label: 'State',
+					choices: [
+						{ id: 'playing', label: 'Playing' },
+						{ id: 'paused', label: 'Paused' },
+						{ id: 'stopped', label: 'Stopped' },
+						{ id: 'notReady', label: 'Not ready' },
+					],
+					default: 'playing'
+				},
+			],
+			callback: (feedback) => {
+				if (self.getVariableValue('mediaState') == feedback.options.state) {
 					return true
 				} else {
 					return false

@@ -123,8 +123,8 @@ module.exports = function (self) {
 		end_slideshow: {
 			name: 'End slideshow',
 			options: [],
-			callback: async (event) => {	
-						sendOscMessage('/oscpoint/slideshow/end', []);
+			callback: async (event) => {
+				sendOscMessage('/oscpoint/slideshow/end', []);
 			},
 		},
 		black_screen: {
@@ -258,7 +258,7 @@ module.exports = function (self) {
 				label: 'Use negative values to specify time from end of media e.g. -10 will seek to last 10 seconds of media.',
 			}],
 			callback: async (event) => {
-				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(event.options.float*1000) }]);
+				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(event.options.float * 1000) }]);
 			},
 		},
 		refreshData: {
@@ -271,8 +271,7 @@ module.exports = function (self) {
 	});
 
 	const sendOscMessage = (path, args) => {
-		console.log(`Sending OSC ${self.config.remotehost}:${self.config.remoteport} ${path}`)
-		//console.log(`Sending Args ${JSON.stringify(args)}`)
+		self.log('debug', `Sending OSC ${path} ${args[0].value}`);
 		self.oscSend(self.config.remotehost, self.config.remoteport, path, args)
 	}
 }
