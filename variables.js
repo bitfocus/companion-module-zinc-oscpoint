@@ -10,6 +10,7 @@ module.exports = async function (self) {
 		{ variableId: 'sectionIndex', name: 'Section index' },
 		{ variableId: 'sectionName', name: 'Section name' },
 		{ variableId: 'notes', name: 'Current slide notes' },
+		{ variableId: 'notesSnip', name: 'Current slide notes (snippet)' },
 		{ variableId: 'mediaState', name: 'Media playback state'},
 		{ variableId: 'mediaDuration', name: 'Media clip duration in seconds'},
 		{ variableId: 'mediaDurationFormatted', name: 'Media clip duration (formatted mm:ss)'},

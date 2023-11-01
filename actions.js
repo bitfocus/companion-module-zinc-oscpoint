@@ -120,6 +120,13 @@ module.exports = function (self) {
 				}
 			},
 		},
+		end_slideshow: {
+			name: 'End slideshow',
+			options: [],
+			callback: async (event) => {	
+						sendOscMessage('/oscpoint/slideshow/end', []);
+			},
+		},
 		black_screen: {
 			name: 'Black screen',
 			options: [{

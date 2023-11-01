@@ -69,13 +69,20 @@ const oscListener = {
                 self.setVariableValues({ sectionName: oscMsg.args[0].value });
                 break;
             case `/slideshow/notes`:
-                self.setVariableValues({ notes: oscMsg.args[0].value });
+                let ns = "(none)";
+                let notes = oscMsg.args[0].value;
+                ns = oscMsg.args[0].value.substr(0, 20);
+                ns=`${ns}...`;
+                self.setVariableValues({
+                    notes: notes,
+                    notesSnip: ns,
+                });
                 break;
             case `/slideshow/media/state`:
                 self.setVariableValues({ mediaState: oscMsg.args[0].value });
                 break;
-                
-            //these three always come together, so we can batch the variable updates.
+
+            //these three always come together, and mainly in this order, so we can risk batching the variable updates.
             case `/slideshow/media/duration`:
                 this.mediaDuration = oscMsg.args[0].value;
                 break;

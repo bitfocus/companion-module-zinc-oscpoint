@@ -3,6 +3,7 @@ const UpgradeScripts = require('./upgrades')
 const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
 const UpdateVariableDefinitions = require('./variables')
+const UpdatePresetDefinitions = require('./presets')
 const oscListener = require('./osc-listener');
 
 
@@ -19,6 +20,7 @@ class ModuleInstance extends InstanceBase {
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
+		this.updatePresetDefinitions() // export preset definitions
 		oscListener.connect(this);
 
 		//set some defaults for the variables
@@ -32,7 +34,8 @@ class ModuleInstance extends InstanceBase {
 			buildsRemaining: 0,
 			sectionIndex: 0,
 			sectionName: "None",
-			notes: " ",
+			notes: "",
+			notesSnip: "(none)",
 			mediaState: "stopped",
 			mediaDuration: 0,
 			mediaDurationFormatted: "00:00",
@@ -124,6 +127,9 @@ class ModuleInstance extends InstanceBase {
 
 	updateVariableDefinitions() {
 		UpdateVariableDefinitions(this)
+	}
+	updatePresetDefinitions() {
+		UpdatePresetDefinitions(this)
 	}
 
 
