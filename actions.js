@@ -261,6 +261,13 @@ module.exports = function (self) {
 				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(event.options.float*1000) }]);
 			},
 		},
+		refreshData: {
+			name: 'Refresh data',
+			options: [],
+			callback: async (event) => {
+				sendOscMessage(`/oscpoint/feedbacks/refresh`, []);
+			},
+		},
 	});
 
 	const sendOscMessage = (path, args) => {

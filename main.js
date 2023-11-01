@@ -25,7 +25,7 @@ class ModuleInstance extends InstanceBase {
 
 		//set some defaults for the variables
 		this.setVariableValues({
-			presentationName: "None",
+			presentationName: "(none)",
 			slideCount: 0,
 			state: 'edit',
 			currentSlide: 0,
@@ -33,7 +33,7 @@ class ModuleInstance extends InstanceBase {
 			buildCount: 0,
 			buildsRemaining: 0,
 			sectionIndex: 0,
-			sectionName: "None",
+			sectionName: "(none)",
 			notes: "",
 			notesSnip: "(none)",
 			mediaState: "stopped",
@@ -49,7 +49,6 @@ class ModuleInstance extends InstanceBase {
 	// When module gets deleted
 	async destroy() {
 		oscListener.close();
-		//this.log('debug', 'destroy')
 	}
 
 

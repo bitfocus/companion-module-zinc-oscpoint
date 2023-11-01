@@ -19,6 +19,9 @@ const oscListener = {
 
         this.udpPort.on('ready', () => {
             self.log('info', `Listening to OSCPoint on port: ${self.config.localport}`)
+
+            //send a refresh request to OSCPoint
+            self.oscSend(self.config.remotehost, self.config.remoteport, `/oscpoint/feedbacks/refresh`, []);
         });
 
         this.udpPort.on('message', (oscMsg) => {
@@ -30,6 +33,7 @@ const oscListener = {
                 self.log('error', 'Error: Selected port in use.' + err.message)
             }
         });
+
     },
 
     processData: function (oscMsg, self) {
@@ -41,7 +45,8 @@ const oscListener = {
 
         switch (feedbackId) {
             case `/presentation/name`:
-                self.setVariableValues({ presentationName: oscMsg.args[0].value });
+                let fileName = oscMsg.args[0].value == "" ? "(none)" : oscMsg.args[0].value;
+                self.setVariableValues({ presentationName: fileName });
                 break;
             case `/presentation/slides/count`:
                 self.setVariableValues({ slideCount: oscMsg.args[0].value });
@@ -66,13 +71,12 @@ const oscListener = {
                 self.setVariableValues({ sectionIndex: oscMsg.args[0].value });
                 break;
             case `/slideshow/section/name`:
-                self.setVariableValues({ sectionName: oscMsg.args[0].value });
+                let sectionName = oscMsg.args[0].value == "" ? "(none)" : oscMsg.args[0].value;
+                self.setVariableValues({ sectionName: sectionName });
                 break;
             case `/slideshow/notes`:
-                let ns = "(none)";
-                let notes = oscMsg.args[0].value;
-                ns = oscMsg.args[0].value.substr(0, 20);
-                ns=`${ns}...`;
+                let ns = oscMsg.args[0].value == "" ? "(none)" : `${oscMsg.args[0].value.substr(0,20)}...`;
+                let notes = oscMsg.args[0].value == "" ? "(none)" : oscMsg.args[0].value;
                 self.setVariableValues({
                     notes: notes,
                     notesSnip: ns,
