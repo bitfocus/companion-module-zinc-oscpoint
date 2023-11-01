@@ -48,7 +48,7 @@ class ModuleInstance extends InstanceBase {
 	}
 	// When module gets deleted
 	async destroy() {
-		oscListener.close();
+		await oscListener.close();
 	}
 
 
