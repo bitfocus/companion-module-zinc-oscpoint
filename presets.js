@@ -1,4 +1,5 @@
 const { Regex, combineRgb } = require('@companion-module/base')
+const imgs = require('./imgs.js')
 
 module.exports = function (self) {
 
@@ -30,30 +31,49 @@ module.exports = function (self) {
 			steps: [{ down: [{ actionId: 'next', },], up: [], },],
 			feedbacks: [], 
 		},
-		start: {
+		startSlideshowFromStart: {
 			type: 'button', 
 			category: 'Slideshow control and feedback', 
-			name: `Start slideshow`, 
+			name: `Start slideshow from start`, 
 			style: {
-				text: `Start show`,
-				size: '24',
+				text: `Start`,
+				size: '14',
+				alignment: "center:bottom",
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 0, 0),
+				png64: imgs.startSlideshowFromStart
 			},
 			steps: [{ down: [{ actionId: 'start_slideshow', options:{ startPosition: 'top'} },], up: [], },],
 			feedbacks: [], 
 		},
-		stop: {
+		startSlideshowFromCurrent: {
+			type: 'button', 
+			category: 'Slideshow control and feedback', 
+			name: `Start slideshow from current slide`, 
+			style: {
+				text: `Current`,
+				size: '14',
+				alignment: "center:bottom",
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(0, 0, 0),
+				png64: imgs.startSlideshowFromCurrent
+			},
+			steps: [{ down: [{ actionId: 'start_slideshow', options:{ startPosition: 'currentSlide'} },], up: [], },],
+			feedbacks: [], 
+		},
+		stopSlideshow: {
 			type: 'button', 
 			category: 'Slideshow control and feedback', 
 			name: `End slideshow`, 
 			style: {
-				text: `End show`,
-				size: '24',
+				text: `End`,
+				size: '14',
+				alignment: "center:bottom",
 				color: combineRgb(255, 0, 0),
 				bgcolor: combineRgb(0, 0, 0),
+				png64: imgs.endSlideshow
 			},
-			steps: [{ down: [{ actionId: 'end_slideshow', options:{ startPosition: 'top'} },], up: [], },],
+			steps: [{ down: [{ actionId: 'end_slideshow', options:{ } },], up: [], },],
 			feedbacks: [], 
 		},
 		white: {
@@ -88,9 +108,11 @@ module.exports = function (self) {
 			name: `Laser pointer (toggle)`, 
 			style: {
 				text: `Laser pointer`,
-				size: '18',
+				size: '14',
+				alignment: "center:bottom",
 				color: combineRgb(255,255,255),
 				bgcolor: combineRgb(0,0,0),
+				png64: imgs.laser
 			},
 			steps: [{ down: [{ actionId: 'laser', options:{action: 'toggle'} },], up: [], },],
 			feedbacks: [], 
@@ -122,7 +144,7 @@ module.exports = function (self) {
 			category: 'Slideshow control and feedback', 
 			name: `File name`, 
 			style: {
-				text: "File\n$(OSCPoint:presentationName)",
+				text: "File:\n$(OSCPoint:presentationName)",
 				size: '14',
 				color: combineRgb(255,255,255),
 				bgcolor: combineRgb(0,0,0),
@@ -182,7 +204,7 @@ module.exports = function (self) {
 			steps: [{ down: [{ actionId: 'mediaTransport', options:{action: 'playpause'} },], up: [], },],
 			feedbacks: [], 
 		},
-		stop: {
+		stopMedia: {
 			type: 'button', 
 			category: 'Media control and feedback', 
 			name: `Stop`, 

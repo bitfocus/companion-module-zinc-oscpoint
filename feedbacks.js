@@ -59,6 +59,6 @@ module.exports = async function (self) {
 					return false
 				}
 			},
-		},
+		}
 	})
 }
