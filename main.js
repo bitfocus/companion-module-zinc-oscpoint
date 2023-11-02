@@ -14,15 +14,16 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
+		this.log('info',`OSCPoint module started`);
 		this.log('info',`Sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`);
-		this.updateStatus(InstanceStatus.Ok)
-
+		this.updateStatus(InstanceStatus.Connecting, `Connecting to port ${this.config.localport}...`);
+		
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 		this.updatePresetDefinitions() // export preset definitions
 		oscListener.connect(this);
-
+		
 		//set some defaults for the variables
 		this.setVariableValues({
 			presentationName: "(none)",
@@ -53,9 +54,11 @@ class ModuleInstance extends InstanceBase {
 
 
 	async configUpdated(config) {
-		this.log('info', 'Config has changed, updating...')
 		this.config = config
+		this.log('info', 'Config has changed, updating...')
 		this.log('info',`Now sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`);
+		this.updateStatus(InstanceStatus.Connecting, 'Reconnecting...');
+		
 		await oscListener.close();
 		oscListener.connect(this);
 	}
@@ -77,7 +80,7 @@ class ModuleInstance extends InstanceBase {
 				type: 'static-text',
 				label: 'Remote IP and Port',
 				value: `The IP address and port of your PowerPoint machine.<br/>
-				The remote port is 35551 by default, but can be changed using the OSCPoint ribbon tab in PowerPoint.`,
+				Default remote port: <b>35551</b>. This can be changed using the OSCPoint ribbon tab in PowerPoint.`,
 				width: 12,
 			},
 			{
@@ -102,7 +105,7 @@ class ModuleInstance extends InstanceBase {
 				type: 'static-text',
 				label: 'Local port',
 				value: `This is the port that this module will use to listen for OSC feedback messages from OSCPoint<br/>
-				The local port is 35550 by default, but can be changed using the OSCPoint ribbon tab in PowerPoint.`,
+				Default local port: <b>35550</b>. This can be changed using the OSCPoint ribbon tab in PowerPoint.`,
 				width: 12,
 			},
 			{

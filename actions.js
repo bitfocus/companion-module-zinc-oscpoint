@@ -1,4 +1,4 @@
-const { Regex } = require('@companion-module/base')
+const { Regex} = require('@companion-module/base')
 
 module.exports = function (self) {
 
@@ -22,13 +22,14 @@ module.exports = function (self) {
 			options: [{
 				type: 'textinput',
 				label: 'Slide number',
-				id: 'int',
-				default: 1,
+				id: 'slideNumber',
+				default: "1",
 				regex: Regex.SIGNED_NUMBER,
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: event.options.int }]);
+				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: parseInt(slideNumber) }]);
 			},
 		},
 		goto_first_slide: {
@@ -55,7 +56,8 @@ module.exports = function (self) {
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				sendOscMessage('/oscpoint/goto/section', [{ type: 's', value: event.options.sectionName }]);
+				const sectionName = await self.parseVariablesInString(event.options.sectionName);
+				sendOscMessage('/oscpoint/goto/section', [{ type: 's', value: sectionName }]);
 			},
 		},
 		hide_slide: {
@@ -63,13 +65,14 @@ module.exports = function (self) {
 			options: [{
 				type: 'textinput',
 				label: 'Slide number',
-				id: 'int',
-				default: 1,
+				id: 'slideNumber',
+				default: "1",
 				regex: Regex.SIGNED_NUMBER,
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: event.options.int }]);
+				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: parseInt(slideNumber) }]);
 			},
 		},
 		unhide_slide: {
@@ -77,13 +80,14 @@ module.exports = function (self) {
 			options: [{
 				type: 'textinput',
 				label: 'Slide number',
-				id: 'int',
-				default: 1,
+				id: 'slideNumber',
+				default: "1",
 				regex: Regex.SIGNED_NUMBER,
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: event.options.int }]);
+				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: parseInt(slideNumber) }]);
 			},
 		},
 		start_slideshow: {
@@ -104,6 +108,7 @@ module.exports = function (self) {
 				label: 'Section name (case sensitive)',
 				id: 'sectionName',
 				default: "Default Section",
+				isVisible: (options) => { return options.startPosition == 'section' },
 				useVariables: true,
 			},],
 			callback: async (event) => {
@@ -115,7 +120,8 @@ module.exports = function (self) {
 						sendOscMessage('/oscpoint/slideshow/start/current', []);
 						break;
 					case 'section':
-						sendOscMessage('/oscpoint/slideshow/start/section', [{ type: 's', value: event.options.sectionName }]);
+						const sectionName = await self.parseVariablesInString(event.options.sectionName);
+						sendOscMessage('/oscpoint/slideshow/start/section', [{ type: 's', value: sectionName }]);
 						break;
 				}
 			},
@@ -246,19 +252,19 @@ module.exports = function (self) {
 			name: 'Move media playhead',
 			options: [{
 				type: 'textinput',
-				label: 'Playhead position in seconds',
-				id: 'float',
-				default: 1,
-				regex: Regex.SIGNED_FLOAT,
+				label: 'Playhead position in milliseconds',
+				id: 'posMs',
+				default: "1",
 				useVariables: true,
 			},
 			{
 				id: 'important-line',
 				type: 'static-text',
-				label: 'Use negative values to specify time from end of media e.g. -10 will seek to last 10 seconds of media.',
+				label: 'Use negative values to specify time from end of media e.g. -10000 will seek to last 10 seconds of media.',
 			}],
 			callback: async (event) => {
-				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(event.options.float * 1000) }]);
+				const posMs = await self.parseVariablesInString(event.options.posMs);
+				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(posMs) }]);
 			},
 		},
 		refreshData: {

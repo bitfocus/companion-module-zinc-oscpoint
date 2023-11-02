@@ -1,4 +1,5 @@
 const osc = require('osc');
+const { InstanceStatus } = require('@companion-module/base')
 
 const oscListener = {
     close: async function () {
@@ -17,7 +18,8 @@ const oscListener = {
         this.udpPort.open();
 
         this.udpPort.on('ready', () => {
-            self.log('info', `Listening to OSCPoint on port: ${self.config.localport}`)
+            self.log('info', `Listening for OSCPoint messsages on port ${self.config.localport}`)
+            self.updateStatus(InstanceStatus.Ok, 'Connected.');
 
             //send a refresh request to OSCPoint
             self.log('info', `Requesting feedback update using OSC /oscpoint/feedbacks/refresh`)
@@ -31,6 +33,10 @@ const oscListener = {
         this.udpPort.on('error', (err) => {
             if (err.code === 'EADDRINUSE') {
                 self.log('error', 'Error: Selected port in use.' + err.message)
+                self.updateStatus(InstanceStatus.ConnectionFailure, `Port ${self.config.localport} in use elsewhere.`);
+            } else {
+                self.log('error', 'UDP port error: ' + err.message)
+                self.updateStatus(InstanceStatus.UnknownError, err.message);
             }
         });
 
