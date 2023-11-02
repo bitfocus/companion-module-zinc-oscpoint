@@ -1,4 +1,4 @@
-const { Regex} = require('@companion-module/base')
+const { Regex } = require('@companion-module/base')
 
 module.exports = function (self) {
 
@@ -28,8 +28,11 @@ module.exports = function (self) {
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
-				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: parseInt(slideNumber) }]);
+				let slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				slideNumber = sanitiseSlideNumber(slideNumber, event);
+				if (slideNumber) {
+					sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }]);
+				}
 			},
 		},
 		goto_first_slide: {
@@ -56,7 +59,7 @@ module.exports = function (self) {
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				const sectionName = await self.parseVariablesInString(event.options.sectionName);
+				let sectionName = await self.parseVariablesInString(event.options.sectionName);
 				sendOscMessage('/oscpoint/goto/section', [{ type: 's', value: sectionName }]);
 			},
 		},
@@ -71,8 +74,11 @@ module.exports = function (self) {
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
-				sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: parseInt(slideNumber) }]);
+				let slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				slideNumber = sanitiseSlideNumber(slideNumber, event);
+				if (slideNumber) {
+					sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: slideNumber }]);
+				}
 			},
 		},
 		unhide_slide: {
@@ -86,8 +92,11 @@ module.exports = function (self) {
 				useVariables: true,
 			},],
 			callback: async (event) => {
-				const slideNumber = await self.parseVariablesInString(event.options.slideNumber);
-				sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: parseInt(slideNumber) }]);
+				let slideNumber = await self.parseVariablesInString(event.options.slideNumber);
+				slideNumber = sanitiseSlideNumber(slideNumber, event);
+				if (slideNumber) {
+					sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: slideNumber }]);
+				}
 			},
 		},
 		start_slideshow: {
@@ -251,22 +260,87 @@ module.exports = function (self) {
 		mediaGotoTime: {
 			name: 'Move media playhead',
 			options: [{
+				id: 'type',
+				type: 'dropdown',
+				label: 'Reference',
+				choices: [
+					{ id: 'start', label: 'From start of clip' },
+					{ id: 'end', label: 'Before end of clip' },
+					{ id: 'forward', label: 'Forward from current position' },
+					{ id: 'back', label: 'Rewind from current position' },
+					{ id: 'percent', label: '%age of way through clip' },
+				],
+				default: 'next'
+			}, {
 				type: 'textinput',
-				label: 'Playhead position in milliseconds',
+				label: 'Milliseconds',
 				id: 'posMs',
 				default: "1",
+				regex: Regex.NUMBER,
 				useVariables: true,
+				isVisible: (options) => { return options.type != 'percent' }
 			},
 			{
-				id: 'important-line',
-				type: 'static-text',
-				label: 'Use negative values to specify time from end of media e.g. -10000 will seek to last 10 seconds of media.',
+				type: 'textinput',
+				label: 'Percent',
+				id: 'posPercent',
+				default: "50",
+				regex: Regex.FLOAT,
+				useVariables: true,
+				isVisible: (options) => { return options.type == 'percent' }
 			}],
 			callback: async (event) => {
-				const posMs = await self.parseVariablesInString(event.options.posMs);
-				sendOscMessage(`/oscpoint/media/goto/position`, [{ type: 'i', value: parseInt(posMs) }]);
-			},
+				let posMs = "";
+				let intPosMs = 0;
+
+				if (event.options.type != 'percent') {
+					posMs = await self.parseVariablesInString(event.options.posMs);
+					console.log('posMs', posMs)
+					intPosMs = parseInt(posMs);
+					if (isNaN(intPosMs)) {
+						self.log('error', `${event.controlId}: ${event.actionId} - invalid millisecond position "${posMs}"`);
+						return;
+					}
+					if (intPosMs < 0) {
+						self.log('warn', `${event.controlId}: ${event.actionId} - millisecond position must be >= 0, but received ${intPosMs}. Reset to 0.`);
+						intPosMs = 0;
+					}
+					intPosMs += 0; // to handle -0 situation.
+				}
+				switch (event.options.type) {
+					case 'start':
+						sendOscMessage(`/oscpoint/media/goto/position/fromstart`, [{ type: 'i', value: intPosMs }]);
+						break;
+					case 'end':
+						sendOscMessage(`/oscpoint/media/goto/position/beforeend`, [{ type: 'i', value: intPosMs }]);
+						break;
+					case 'forward':
+						sendOscMessage(`/oscpoint/media/goto/position/forward`, [{ type: 'i', value: intPosMs }]);
+						break;
+					case 'back':
+						sendOscMessage(`/oscpoint/media/goto/position/back`, [{ type: 'i', value: intPosMs }]);
+						break;
+					case 'percent':
+						const posPercent = await self.parseVariablesInString(event.options.posPercent);
+						let floatPosPercent = parseFloat(posPercent);
+						if (isNaN(floatPosPercent)) {
+							self.log('error', `${event.controlId}: ${event.actionId} - invalid percentage "${posPercent}"`);
+							return;
+						}
+						if (floatPosPercent < 0 || floatPosPercent > 100) {
+							self.log('warn', `${event.controlId}: ${event.actionId} | Percent position must be >=0 and <= 100, but received ${floatPosPercent}. Reset to 0.`);
+							floatPosPercent = 0;
+						}
+						floatPosPercent += 0; // to handle -0 situation.
+						sendOscMessage(`/oscpoint/media/goto/position/percent`, [{ type: 'f', value: floatPosPercent }]);
+						break;
+					default:
+						self.log('error', `${event.controlId}: ${event.actionId} - invalid reference "${event.options.type}"`);
+						break;
+				}
+			}
 		},
+
 		refreshData: {
 			name: 'Refresh data',
 			options: [],
@@ -277,7 +351,21 @@ module.exports = function (self) {
 	});
 
 	const sendOscMessage = (path, args) => {
-		self.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
+		//self.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
+		console.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
 		self.oscSend(self.config.remotehost, self.config.remoteport, path, args)
 	}
+
+	const sanitiseSlideNumber = (slideNumber, event) => {
+		const intSlideNumber = parseInt(slideNumber);
+		if (isNaN(intSlideNumber)) {
+			self.log('error', `${event.controlId}: ${event.actionId} - invalid slide number "${slideNumber}"`);
+			return false;
+		}
+		if (intSlideNumber < 1) {
+			self.log('warn', `${event.controlId}: ${event.actionId} - slide number ${intSlideNumber} is < 1, setting to 1`);
+			return 1;
+		}
+		return intSlideNumber;
+	};
 }

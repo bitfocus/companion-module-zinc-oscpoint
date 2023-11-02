@@ -243,6 +243,19 @@ module.exports = function (self) {
 			steps: [{ down: [{ actionId: 'mediaBookmarks', options:{action: 'next'} },], up: [], },],
 			feedbacks: [], 
 		},
+		lastTenSeconds: {
+			type: 'button', 
+			category: 'Media control and feedback', 
+			name: `Last 10 seconds`, 
+			style: {
+				text: `Last 10s`,
+				size: '18',
+				color: combineRgb(255,255,255),
+				bgcolor: combineRgb(0,0,0),
+			},
+			steps: [{ down: [{ actionId: 'mediaGotoTime', options:{type: 'end',posMs: "10000"} },], up: [], },],
+			feedbacks: [], 
+		},
 		mediaState: {
 			type: 'button', 
 			category: 'Media control and feedback', 
