@@ -270,7 +270,7 @@ module.exports = function (self) {
 					{ id: 'back', label: 'Rewind from current position' },
 					{ id: 'percent', label: '%age of way through clip' },
 				],
-				default: 'next'
+				default: 'start'
 			}, {
 				type: 'textinput',
 				label: 'Milliseconds',
