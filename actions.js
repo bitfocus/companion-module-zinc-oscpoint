@@ -340,12 +340,49 @@ module.exports = function (self) {
 				}
 			}
 		},
-
 		refreshData: {
 			name: 'Refresh data',
 			options: [],
 			callback: async (event) => {
 				sendOscMessage(`/oscpoint/feedbacks/refresh`, []);
+			},
+		},
+		enableActions: {
+			name: 'Global enable/disable actions',
+			options: [{
+				id: 'action',
+				type: 'dropdown',
+				label: 'Action',
+				choices: [
+					{ id: 'enable', label: 'Enable actions' },
+					{ id: 'disable', label: 'Disable actions' },
+				],
+				default: 'enable'
+			},
+			{
+				type:"static-text",
+				label:"WARNING! OSCPoint will only respond to the Enable Actions command - all others will  be ignored.",
+				value:"",
+				isVisible: (options) => { return options.action == 'disable' }
+			}],
+			callback: async (event) => {
+				sendOscMessage(`/oscpoint/actions/${event.options.action}`, []);
+			},
+		},
+		enableFeebacks: {
+			name: 'Global enable/disable feedbacks',
+			options: [{
+				id: 'action',
+				type: 'dropdown',
+				label: 'Action',
+				choices: [
+					{ id: 'enable', label: 'Enable feedbacks' },
+					{ id: 'disable', label: 'Disable feedbacks' },
+				],
+				default: 'enable'
+			}],
+			callback: async (event) => {
+				sendOscMessage(`/oscpoint/feedbacks/${event.options.action}`, []);
 			},
 		},
 	});
