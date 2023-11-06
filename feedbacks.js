@@ -19,7 +19,7 @@ module.exports = async function (self) {
 						{ id: 'slideshow', label: 'Slide show' },
 						{ id: 'edit', label: 'Edit' },
 					],
-					default: 'slideshow'
+					default: 'slideshow',
 				},
 			],
 			callback: (feedback) => {
@@ -49,7 +49,7 @@ module.exports = async function (self) {
 						{ id: 'stopped', label: 'Stopped' },
 						{ id: 'notReady', label: 'Not ready' },
 					],
-					default: 'playing'
+					default: 'playing',
 				},
 			],
 			callback: (feedback) => {
@@ -59,6 +59,6 @@ module.exports = async function (self) {
 					return false
 				}
 			},
-		}
+		},
 	})
 }
