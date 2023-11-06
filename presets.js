@@ -278,6 +278,19 @@ module.exports = function (self) {
 				},
 			},], 
 		},
+		mediaDuration: {
+			type: 'button', 
+			category: 'Media control and feedback', 
+			name: `Media duration`, 
+			style: {
+				text: `Duration:\n$(OSCPoint:mediaDurationFormatted)`,
+				size: '14',
+				color: combineRgb(255,255,255),
+				bgcolor: combineRgb(0,0,0),
+			},
+			steps: [],
+			feedbacks: [], 
+		},
 		mediaPosition: {
 			type: 'button', 
 			category: 'Media control and feedback', 
