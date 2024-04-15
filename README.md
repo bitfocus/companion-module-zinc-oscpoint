@@ -5,3 +5,9 @@ Full documentation for OSCPoint is available at [https://github.com/phuvf/oscpoi
 See also [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE).
 
 To do for next release: Use tags in the vX.Y.Z format
+
+## Changelog
+
+### v1.0.3
+
+- Fixed some graphics for media control presets
