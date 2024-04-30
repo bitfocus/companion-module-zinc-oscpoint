@@ -15,6 +15,13 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
+		this.files = []
+		this.fileIndex = 0
+		this.fileCount = 0
+		this.presentations = []
+		this.presentation = {}
+		this.presentationIndex = 0
+		this.presentationCount = 0
 		this.log('info', `OSCPoint module started`)
 		this.log('info', `Sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`)
 		this.updateStatus(InstanceStatus.Connecting, `Connecting to port ${this.config.localport}...`)

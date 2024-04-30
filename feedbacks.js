@@ -59,6 +59,33 @@ module.exports = async function (self) {
 				return false
 			},
 		},
+		fileAccess: {
+			name: 'File access feedback',
+			type: 'boolean',
+			defaultStyle: {
+				bgcolor: combineRgb(0, 200, 0),
+				color: combineRgb(0, 0, 0),
+				text: 'File access: Enabled',
+			},
+			options: [
+				{
+					id: 'state',
+					type: 'dropdown',
+					label: 'File access state',
+					choices: [
+						{ id: 'enabled', label: 'Enabled' },
+						{ id: 'disabled', label: 'Denied' },
+					],
+					default: 'enabled',
+				},
+			],
+			callback: (feedback) => {
+				if (self.getVariableValue('fileAccessEnabled') == true) {
+					return feedback.options.state == 'enabled'
+				}
+				return feedback.options.state == 'disabled'
+			},
+		},
 		// slidePreview: {
 		// 	type: 'advanced',
 		// 	name: 'Display slide preview',
@@ -192,32 +219,52 @@ module.exports = async function (self) {
 				}
 			},
 		},
-		fileAccessEnabled: {
-			name: 'File access feedback',
-			type: 'boolean',
-			showInvert: false,
-			defaultStyle: {
-				bgcolor: combineRgb(0, 200, 0),
-				color: combineRgb(0, 0, 0),
-				text: 'File access: Enabled',
-			},
-			options: [
-				{
-					id: 'state',
-					type: 'dropdown',
-					label: 'File access state',
-					choices: [
-						{ id: 'enabled', label: 'Enabled' },
-						{ id: 'disabled', label: 'Disabled' },
-					],
-					default: 'enabled',
-				},
-			],
+		folderProgressBars: {
+			type: 'advanced',
+			name: 'Folder position progress bar',
+			description: 'Displays as a bar showing scroll position through folder',
+			options: [],
 			callback: (feedback) => {
-				if (self.getVariableValue('fileAccessEnabled') == true) {
-					return feedback.options.state == 'enabled'
+				let dotHeight = 8
+				let blankSpace = 100 - dotHeight
+
+				let selectedPortion = self.getVariableValue('activeFolderSelectedIndex') - 1
+				let totalPortion = self.getVariableValue('activeFolderFileCount') - 1
+
+				self.log('debug', `Folder progress bar: ${selectedPortion} / ${totalPortion}`)
+
+				let portion = selectedPortion / totalPortion
+				self.log('debug', `Folder progress bar decimal: ${portion}`)
+
+				let preDot = blankSpace * portion
+				let postDot = blankSpace * (1-portion)
+				self.log('debug', `pre/post height: ${preDot}/${postDot}`)
+
+				const options = {
+					width: feedback.image.width,
+					height: feedback.image.height,
+					colors: [
+						{ size: postDot, color: combineRgb(0, 50, 0), background: combineRgb(0, 50, 0), backgroundOpacity: 255 },
+						{
+							size: dotHeight,
+							color: combineRgb(255, 255, 0),
+							background: combineRgb(255, 255, 0),
+							backgroundOpacity: 255,
+						},
+						{ size: preDot, color: combineRgb(0, 50, 0), background: combineRgb(0, 50, 0), backgroundOpacity: 255 },
+					],
+					barLength: 62,
+					barWidth: 6,
+					value: 100,
+					type: 'vertical',
+					offsetX: 62,
+					offsetY: 5,
+					opacity: 255,
 				}
-				return feedback.options.state == 'disabled'
+
+				return {
+					imageBuffer: graphics.bar(options),
+				}
 			},
 		},
 	})

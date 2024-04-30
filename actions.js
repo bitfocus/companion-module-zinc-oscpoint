@@ -487,6 +487,93 @@ module.exports = function (self) {
 				sendOscMessage(`/oscpoint/files/list`, [])
 			},
 		},
+		changeFileIndex: {
+			name: 'Change selected file',
+			description: 'Move through list of files in active folder.',
+			options: [
+				{
+					id: 'action',
+					type: 'dropdown',
+					label: 'Action',
+					choices: [
+						{ id: 'increment_1', label: 'Scroll up list 1' },
+						{ id: 'increment_10', label: 'Scroll up list 10' },
+						{ id: 'decrement_1', label: 'Scroll down list 1' },
+						{ id: 'decrement_10', label: 'Scroll down list 10' },
+					],
+					default: 'increment_1',
+				},
+			],
+			callback: async (event) => {
+				switch (event.options.action) {
+					case 'increment_1':
+						self.fileIndex++
+						if (self.fileIndex > self.fileCount - 1) {
+							self.fileIndex = 0
+						}
+						break
+					case 'increment_10':
+						self.fileIndex = self.fileIndex + 10
+						if (self.fileIndex > self.fileCount - 1) {
+							self.fileIndex = self.fileCount - 1
+						}
+						break
+					case 'decrement_1':
+						self.fileIndex--
+						if (self.fileIndex < 0) {
+							self.fileIndex = self.fileCount - 1
+						}
+						break
+					case 'decrement_10':
+						self.fileIndex = self.fileIndex - 10
+						if (self.fileIndex < 0) {
+							self.fileIndex = 0
+						}
+						break
+				}
+				self.log('debug', `Changing file index to ${self.fileIndex}`)
+				let filename = self.files[self.fileIndex].name
+				self.log('debug', `Changing active folder filename to: ${filename}`)
+				self.setVariableValues({ activeFolderFileName: filename, activeFolderSelectedIndex: self.fileIndex + 1 })
+				self.checkFeedbacks('folderProgressBars')
+			},
+		},
+		changePresentationIndex: {
+			name: 'Move through list of open presentations',
+			description: '',
+			options: [
+				{
+					id: 'action',
+					type: 'dropdown',
+					label: 'Action',
+					choices: [
+						{ id: 'increment', label: 'Scroll up list' },
+						{ id: 'decrement', label: 'Scroll down list' },
+					],
+					default: 'increment',
+				},
+			],
+			callback: async (event) => {
+				switch (event.options.action) {
+					case 'increment':
+						self.presentationIndex++
+						if (self.presentationIndex > self.presentationCount - 1) {
+							self.presentationIndex = 0
+						}
+						break
+					case 'decrement':
+						self.presentationIndex--
+						if (self.presentationIndex < 0) {
+							self.presentationIndex = self.presentationCount - 1
+						}
+						break
+				}
+				self.log('debug', `Changing presentation index to ${self.presentationIndex}`)
+				let presentationName = self.presentations[self.presentationIndex].name
+				self.log('debug', `Changing selected presentation name to: ${presentationName}`)
+				self.setVariableValues({ presentationsSelectedFilename: presentationName })
+			},
+		},
 	})
 
 	const sendOscMessage = (path, args) => {

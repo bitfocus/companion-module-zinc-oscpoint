@@ -1,5 +1,6 @@
 const osc = require('osc')
 const { InstanceStatus } = require('@companion-module/base')
+const { activeFolderSelectedIndex, activeFolderFileCount } = require('./variable-defaults')
 
 const oscListener = {
 	close: async function () {
@@ -50,6 +51,29 @@ const oscListener = {
 		switch (feedbackId) {
 			case `/v2/presentations`: {
 				self.setVariableValues({ presentations: oscMsg.args[0].value })
+				try {
+					self.presentations = JSON.parse(oscMsg.args[0].value)
+				} catch (e) {
+					self.presentationCount = 0
+					self.presentationIndex = 0
+					return self.log('error', `Error parsing presentations JSON: ${e}`)
+				}
+				self.presentationCount = self.presentations.length
+
+				if (self.presentationCount == 0) {
+					return self.setVariableValues({
+						presentationsSelectedFilename: '',
+					})
+				}
+
+				//pin index to within the bounds of the array
+				self.presentationIndex = Math.min(self.presentationIndex, self.presentationCount - 1)
+				self.presentationIndex = Math.max(self.presentationIndex, 0)
+
+				self.log('debug', `Getting presentation index ${self.presentationIndex}`)
+				self.setVariableValues({
+					presentationsSelectedFilename: self.presentations[self.presentationIndex].name,
+				})
 				break
 			}
 			case `/v2/presentation`: {
@@ -58,11 +82,36 @@ const oscListener = {
 			}
 			case `/v2/files`: {
 				self.setVariableValues({ files: oscMsg.args[0].value })
+				try {
+					self.files = JSON.parse(oscMsg.args[0].value)
+				} catch (e) {
+					self.fileCount = 0
+					self.fileIndex = 0
+					return self.log('error', `Error parsing files JSON: ${e}`)
+				}
+				self.fileCount = self.files.length
+
+				if (self.fileCount == 0) {
+					return self.setVariableValues({
+						activeFolderFileName: '',
+					})
+				}
+
+				//pin index to within the bounds of the array
+				self.fileIndex = Math.min(self.fileIndex, self.fileCount - 1)
+				self.fileIndex = Math.max(self.fileIndex, 0)
+
+				self.log('debug', `Getting file index ${self.fileIndex}`)
+				self.setVariableValues({
+					activeFolderFileName: self.files[self.fileIndex].name,
+					activeFolderSelectedIndex: self.fileIndex + 1,
+					activeFolderFileCount: self.fileCount,
+				})
 				break
 			}
 			case `/v2/files/enabled`: {
 				self.setVariableValues({ fileAccessEnabled: oscMsg.args[0].value })
-				self.checkFeedbacks('fileAccessEnabled')
+				self.checkFeedbacks('fileAccess')
 				break
 			}
 			case `/v2/files/activefolder`: {

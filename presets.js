@@ -133,7 +133,7 @@ module.exports = function (self) {
 						state: 'slideshow',
 					},
 					style: {
-						color: combineRgb(0, 0, 0),
+						color: combineRgb(255, 255, 255),
 						bgcolor: combineRgb(255, 0, 0),
 					},
 				},
@@ -294,7 +294,7 @@ module.exports = function (self) {
 						state: 'playing',
 					},
 					style: {
-						color: combineRgb(0, 0, 0),
+						color: combineRgb(255, 255, 255),
 						bgcolor: combineRgb(255, 0, 0),
 					},
 				},
@@ -369,9 +369,14 @@ module.exports = function (self) {
 			steps: [],
 			feedbacks: [
 				{
-					feedbackId: 'fileAccessEnabled',
+					feedbackId: 'fileAccess',
 					options: {
 						state: 'enabled',
+					},
+					style: {
+						color: combineRgb(0, 0, 0),
+						bgcolor: combineRgb(0, 200, 0),
+						text: 'File access: Enabled',
 					},
 				},
 			],

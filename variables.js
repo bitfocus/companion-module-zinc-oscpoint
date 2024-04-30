@@ -1,6 +1,10 @@
 module.exports = async function (self) {
 	self.setVariableDefinitions([
 		{ variableId: 'presentations', name: 'JSON array of all the presentations currently open' },
+		{
+			variableId: 'presentationsSelectedFilename',
+			name: 'The filename of the selected presentation (used when selecting file to close)',
+		},
 		{ variableId: 'presentation', name: 'JSON object with active presentation data' },
 		{ variableId: 'presentationName', name: 'Presentation filename' },
 		{ variableId: 'slideCount', name: 'Total slide count' },
@@ -33,5 +37,8 @@ module.exports = async function (self) {
 			variableId: 'activeFolderFullPath',
 			name: 'The full path of active folder on the remote machine.',
 		},
+		{ variableId: 'activeFolderFileName', name: 'Name of selected file in active folder' },
+		{ variableId: 'activeFolderFileCount', name: 'Number of files n active folder' },
+		{ variableId: 'activeFolderSelectedIndex', name: 'Index of selected file in active folder' },
 	])
 }

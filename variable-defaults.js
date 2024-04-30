@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 const variableDefaults = {
     presentations: "[]",
+    presentationsSelectedFilename: "",
     presentation: "{}",
     presentationName: "(none)",
     slideCount: '-',
@@ -24,6 +25,9 @@ const variableDefaults = {
     files: "[]",
     activeFolder: "(none)",
     activeFolderFullPath: "(none)",
+    activeFolderFileName: "",
+    activeFolderFileCount: 0,
+    activeFolderSelectedIndex: 1,
 };
 
 module.exports = variableDefaults;
