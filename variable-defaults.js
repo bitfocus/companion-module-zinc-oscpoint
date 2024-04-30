@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 const variableDefaults = {
+    presentations: "[]",
+    presentation: "{}",
     presentationName: "(none)",
     slideCount: '-',
     state: 'edit',
@@ -18,6 +20,10 @@ const variableDefaults = {
     mediaPositionFormatted: "--:--",
     mediaRemaining: 0,
     mediaRemainingFormatted: "--:--",
+    fileAccessEnabled: false,
+    files: "[]",
+    activeFolder: "(none)",
+    activeFolderFullPath: "(none)",
 };
 
 module.exports = variableDefaults;

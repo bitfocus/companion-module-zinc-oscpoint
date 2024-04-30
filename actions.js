@@ -409,7 +409,7 @@ module.exports = function (self) {
 				sendOscMessage(`/oscpoint/actions/${event.options.action}`, [])
 			},
 		},
-		enableFeebacks: {
+		enableFeedbacks: {
 			name: 'Global enable/disable feedbacks',
 			options: [
 				{
@@ -425,6 +425,66 @@ module.exports = function (self) {
 			],
 			callback: async (event) => {
 				sendOscMessage(`/oscpoint/feedbacks/${event.options.action}`, [])
+			},
+		},
+		openFile: {
+			name: 'Open/activate file',
+			description:
+				'Open a .ppt or .pptx file from the active folder on the remote machine. Will switch to the specified file if it is already open',
+			options: [
+				{
+					type: 'textinput',
+					label: 'File name',
+					id: 'fileName',
+					default: 'my_presentation.pptx',
+					useVariables: true,
+				},
+			],
+			callback: async (event) => {
+				const fileName = await self.parseVariablesInString(event.options.fileName)
+				sendOscMessage(`/oscpoint/files/open`, [{ type: 's', value: fileName }])
+			},
+		},
+		closeFile: {
+			name: 'Close presentation',
+			description: 'Close an open presentation file.',
+			options: [
+				{
+					type: 'textinput',
+					label: 'File name',
+					id: 'fileName',
+					default: 'my_presentation.pptx',
+					useVariables: true,
+				},
+			],
+			callback: async (event) => {
+				const fileName = await self.parseVariablesInString(event.options.fileName)
+				sendOscMessage(`/oscpoint/files/close`, [{ type: 's', value: fileName }])
+			},
+		},
+		setActiveFolder: {
+			name: 'Set active folder',
+			description: "Relative to the user's home directory - example: Desktop\\myfolder\\oscpoint",
+			options: [
+				{
+					type: 'textinput',
+					label: 'Folder path',
+					id: 'folder',
+					default: 'Desktop\\myfolder\\oscpoint',
+					useVariables: true,
+				},
+			],
+			callback: async (event) => {
+				const path = await self.parseVariablesInString(event.options.folder)
+				sendOscMessage(`/oscpoint/files/setpath`, [{ type: 's', value: path }])
+			},
+		},
+		refreshFileList: {
+			name: 'Refresh file list',
+			description: 'Refresh the list of .ppt and .pptx files in the active folder on the remote machine.',
+			options: [],
+			callback: async (_event) => {
+				sendOscMessage(`/oscpoint/files/list`, [])
 			},
 		},
 	})

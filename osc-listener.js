@@ -48,6 +48,31 @@ const oscListener = {
 		const feedbackId = oscMsg.address.substring(9)
 
 		switch (feedbackId) {
+			case `/v2/presentations`: {
+				self.setVariableValues({ presentations: oscMsg.args[0].value })
+				break
+			}
+			case `/v2/presentation`: {
+				self.setVariableValues({ presentation: oscMsg.args[0].value })
+				break
+			}
+			case `/v2/files`: {
+				self.setVariableValues({ files: oscMsg.args[0].value })
+				break
+			}
+			case `/v2/files/enabled`: {
+				self.setVariableValues({ fileAccessEnabled: oscMsg.args[0].value })
+				self.checkFeedbacks('fileAccessEnabled')
+				break
+			}
+			case `/v2/files/activefolder`: {
+				self.setVariableValues({ activeFolder: oscMsg.args[0].value })
+				break
+			}
+			case `/v2/files/activefolder/fullpath`: {
+				self.setVariableValues({ activeFolderFullPath: oscMsg.args[0].value })
+				break
+			}
 			case `/presentation/name`: {
 				let fileName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
 				self.setVariableValues({ presentationName: fileName })
@@ -65,6 +90,7 @@ const oscListener = {
 				break
 			case `/slideshow/builds/position`:
 				self.setVariableValues({ buildPosition: oscMsg.args[0].value })
+				self.checkFeedbacks('slideProgressBars')
 				break
 			case `/slideshow/builds/count`:
 				self.setVariableValues({ buildCount: oscMsg.args[0].value })
@@ -100,6 +126,7 @@ const oscListener = {
 				break
 			case `/slideshow/media/position`:
 				this.mediaPosition = oscMsg.args[0].value
+				self.checkFeedbacks('mediaProgressBar')
 				break
 			case `/slideshow/media/remaining`:
 				this.mediaRemaining = oscMsg.args[0].value
@@ -111,6 +138,10 @@ const oscListener = {
 					mediaRemaining: Math.floor(this.mediaRemaining / 1000),
 					mediaRemainingFormatted: this.convertToMmSs(this.mediaRemaining),
 				})
+				break
+			case `/slide/current/preview`:
+				self.setVariableValues({ slidePreview: oscMsg.args[0].value })
+				self.checkFeedbacks('slidePreview')
 				break
 			default:
 				self.log('debug', `No action found for OSC ${oscMsg.address}`)

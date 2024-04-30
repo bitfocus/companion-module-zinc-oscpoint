@@ -159,11 +159,19 @@ module.exports = function (self) {
 			style: {
 				text: 'Slide\n$(OSCPoint:currentSlide)/$(OSCPoint:slideCount)',
 				size: '18',
+				alignment: 'center:top',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 0, 0),
 			},
 			steps: [],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'slideProgressBars',
+					options: {
+						type: 'slide',
+					},
+				},
+			],
 		},
 		buildNumbers: {
 			type: 'button',
@@ -174,9 +182,17 @@ module.exports = function (self) {
 				size: '18',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 0, 0),
+				alignment: 'center:top',
 			},
 			steps: [],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'slideProgressBars',
+					options: {
+						type: 'build',
+					},
+				},
+			],
 		},
 		notes: {
 			type: 'button',
@@ -306,9 +322,17 @@ module.exports = function (self) {
 				size: '14',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 0, 0),
+				alignment: 'center:top',
 			},
 			steps: [],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'mediaProgressBar',
+					options: {
+						type: 'countUp',
+					},
+				},
+			],
 		},
 		mediaRemaining: {
 			type: 'button',
@@ -319,6 +343,64 @@ module.exports = function (self) {
 				size: '14',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(0, 0, 0),
+				alignment: 'center:top',
+			},
+			steps: [],
+			feedbacks: [
+				{
+					feedbackId: 'mediaProgressBar',
+					options: {
+						type: 'countDown',
+					},
+				},
+			],
+		},
+		fileAccessEnabled: {
+			type: 'button',
+			category: 'File management',
+			name: `File access feedback`,
+			style: {
+				text: `File access:\nDenied`,
+				size: 'auto',
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(200, 0, 0),
+				alignment: 'center:top',
+			},
+			steps: [],
+			feedbacks: [
+				{
+					feedbackId: 'fileAccessEnabled',
+					options: {
+						state: 'enabled',
+					},
+				},
+			],
+		},
+		activeFolder: {
+			type: 'button',
+			category: 'File management',
+			name: `Active folder`,
+			style: {
+				text: `Active folder:\n$(OSCPoint:activeFolder)`,
+				size: 'auto',
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(0, 0, 0),
+				alignment: 'center:top',
+			},
+			steps: [],
+			feedbacks: [],
+		},
+		logo: {
+			type: 'button',
+			category: 'Just for fun',
+			name: `Static OSCPoint logo`,
+			style: {
+				text: ``,
+				size: 'auto',
+				show_topbar: false,
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(0, 0, 0),
+				png64: imgs.logo,
 			},
 			steps: [],
 			feedbacks: [],

@@ -1,5 +1,7 @@
 module.exports = async function (self) {
 	self.setVariableDefinitions([
+		{ variableId: 'presentations', name: 'JSON array of all the presentations currently open' },
+		{ variableId: 'presentation', name: 'JSON object with active presentation data' },
 		{ variableId: 'presentationName', name: 'Presentation filename' },
 		{ variableId: 'slideCount', name: 'Total slide count' },
 		{ variableId: 'state', name: 'Presentation state' },
@@ -18,5 +20,18 @@ module.exports = async function (self) {
 		{ variableId: 'mediaPositionFormatted', name: 'Current media playhead position (formatted mm:ss)' },
 		{ variableId: 'mediaRemaining', name: 'Remaining media time in seconds' },
 		{ variableId: 'mediaRemainingFormatted', name: 'Remaining media time (formatted mm:ss)' },
+		{
+			variableId: 'fileAccessEnabled',
+			name: 'Do we have access to files on this machine? Must be set locally via OSCPoint tab in PowerPoint.',
+		},
+		{ variableId: 'files', name: 'JSON array of the .ppt and .pptx files in the active folder' },
+		{
+			variableId: 'activeFolder',
+			name: "The active folder on the remote machine, relative to the user's home directory.",
+		},
+		{
+			variableId: 'activeFolderFullPath',
+			name: 'The full path of active folder on the remote machine.',
+		},
 	])
 }
