@@ -1,0 +1,150 @@
+const { combineRgb } = require('@companion-module/base')
+module.exports = {
+	fileActionHeader: {
+		category: 'File management',
+		name: 'Actions',
+		type: 'text',
+		text: 'Change file management configuration.',
+	},
+	setActiveFolder: {
+		type: 'button',
+		category: 'File management',
+		name: `Set active folder`,
+		style: {
+			text: `Set active folder`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [{ down: [{ actionId: 'setActiveFolder', options: { folder: 'My folder here' } }], up: [] }],
+		feedbacks: [],
+	},
+
+	fileListNavHeader: {
+		category: 'File management',
+		name: 'File list navigation',
+		type: 'text',
+		text: 'Navigate through the file list to select the file to open.',
+	},
+	plus1: {
+		type: 'button',
+		category: 'File management',
+		name: `Next file`,
+		style: {
+			text: `+1`,
+			size: '30',
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [{ down: [{ actionId: 'changeFileIndex', options: { action: 'increment_1' } }], up: [] }],
+		feedbacks: [],
+	},
+	plus10: {
+		type: 'button',
+		category: 'File management',
+		name: `Next file`,
+		style: {
+			text: `+10`,
+			size: '30',
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [{ down: [{ actionId: 'changeFileIndex', options: { action: 'increment_10' } }], up: [] }],
+		feedbacks: [],
+	},
+	minus1: {
+		type: 'button',
+		category: 'File management',
+		name: `Next file`,
+		style: {
+			text: `-1`,
+			size: '30',
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [{ down: [{ actionId: 'changeFileIndex', options: { action: 'decrement_1' } }], up: [] }],
+		feedbacks: [],
+	},
+	minus10: {
+		type: 'button',
+		category: 'File management',
+		name: `Next file`,
+		style: {
+			text: `-10`,
+			size: '30',
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [{ down: [{ actionId: 'changeFileIndex', options: { action: 'decrement_10' } }], up: [] }],
+		feedbacks: [],
+	},
+	selectedFileName: {
+		type: 'button',
+		category: 'File management',
+		name: `Selected file name`,
+		style: {
+			text: `Selected file: $(OSCPoint:activeFolderFileName)`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			alignment: 'center:top',
+		},
+		steps: [],
+	},
+	openFile: {
+		type: 'button',
+		category: 'File management',
+		name: `Open file`,
+		style: {
+			text: `Open file`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [{ down: [{ actionId: 'openFile', options: { fileName: '$(OSCPoint:activeFolderFileName)' } }], up: [] }],
+		feedbacks: [],
+	},
+	fileStatusHeader: {
+		category: 'File management',
+		name: 'Status feedback',
+		type: 'text',
+		text: 'The current status of file management features. Note that file access must be enabled locally via the OSCPoint tab in PowerPoint.',
+	},
+	fileAccessEnabled: {
+		type: 'button',
+		category: 'File management',
+		name: `File access feedback`,
+		style: {
+			text: `File access:\nDenied`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(200, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: 'fileAccess',
+				options: {
+					state: 'enabled',
+				},
+				style: {
+					color: combineRgb(0, 0, 0),
+					bgcolor: combineRgb(0, 200, 0),
+					text: 'File access: Enabled',
+				},
+			},
+		],
+	},
+	activeFolder: {
+		type: 'button',
+		category: 'File management',
+		name: `Active folder`,
+		style: {
+			text: `Active folder:\n$(OSCPoint:activeFolder)`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [],
+		feedbacks: [],
+	},
+}

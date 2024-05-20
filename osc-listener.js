@@ -1,6 +1,5 @@
 const osc = require('osc')
 const { InstanceStatus } = require('@companion-module/base')
-const { activeFolderSelectedIndex, activeFolderFileCount } = require('./variable-defaults')
 
 const oscListener = {
 	close: async function () {
@@ -54,25 +53,34 @@ const oscListener = {
 				try {
 					self.presentations = JSON.parse(oscMsg.args[0].value)
 				} catch (e) {
-					self.presentationCount = 0
-					self.presentationIndex = 0
+					self.presentationsCount = 0
+					self.presentationsIndex = 0
 					return self.log('error', `Error parsing presentations JSON: ${e}`)
 				}
-				self.presentationCount = self.presentations.length
 
-				if (self.presentationCount == 0) {
+				self.presentationsCount = self.presentations.length
+				if (self.presentationsCount == 0) {
 					return self.setVariableValues({
 						presentationsSelectedFilename: '',
+						presentationsFileNames: JSON.stringify([]),
+						presentationsSelectedIndex: 1,
 					})
 				}
 
-				//pin index to within the bounds of the array
-				self.presentationIndex = Math.min(self.presentationIndex, self.presentationCount - 1)
-				self.presentationIndex = Math.max(self.presentationIndex, 0)
+				let names = []
+				for (let i = 0; i < self.presentationsCount; i++) {
+					names.push(self.presentations[i].name)
+				}
 
-				self.log('debug', `Getting presentation index ${self.presentationIndex}`)
+				//pin index to within the bounds of the array
+				self.presentationsIndex = Math.min(self.presentationsIndex, self.presentationsCount - 1)
+				self.presentationsIndex = Math.max(self.presentationsIndex, 0)
+
+				self.log('debug', `Getting presentation index ${self.presentationsIndex}`)
 				self.setVariableValues({
-					presentationsSelectedFilename: self.presentations[self.presentationIndex].name,
+					presentationsSelectedFilename: self.presentations[self.presentationsIndex].name,
+					presentationsFileNames: JSON.stringify(names),
+					presentationsCount: self.presentationsCount,
 				})
 				break
 			}
@@ -93,8 +101,16 @@ const oscListener = {
 
 				if (self.fileCount == 0) {
 					return self.setVariableValues({
-						activeFolderFileName: '',
+						activeFolderFileName: '(no files in folder)',
+						activeFolderSelectedIndex: 0,
+						activeFolderFileCount: 0,
+						activeFolderFileNames: JSON.stringify([]),
 					})
+				}
+
+				let names = []
+				for (let i = 0; i < self.fileCount; i++) {
+					names.push(self.files[i].name)
 				}
 
 				//pin index to within the bounds of the array
@@ -106,6 +122,7 @@ const oscListener = {
 					activeFolderFileName: self.files[self.fileIndex].name,
 					activeFolderSelectedIndex: self.fileIndex + 1,
 					activeFolderFileCount: self.fileCount,
+					activeFolderFileNames: JSON.stringify(names),
 				})
 				break
 			}

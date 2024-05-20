@@ -429,8 +429,7 @@ module.exports = function (self) {
 		},
 		openFile: {
 			name: 'Open/activate file',
-			description:
-				'Open a .ppt or .pptx file from the active folder on the remote machine. Will switch to the specified file if it is already open',
+			description: 'Open a .ppt or .pptx file from the active folder on the remote machine.',
 			options: [
 				{
 					type: 'textinput',
@@ -443,6 +442,23 @@ module.exports = function (self) {
 			callback: async (event) => {
 				const fileName = await self.parseVariablesInString(event.options.fileName)
 				sendOscMessage(`/oscpoint/files/open`, [{ type: 's', value: fileName }])
+			},
+		},
+		activatePresentation: {
+			name: 'Switch active presentation',
+			description: 'Switch between open presentations.',
+			options: [
+				{
+					type: 'textinput',
+					label: 'File name',
+					id: 'fileName',
+					default: 'my_presentation.pptx',
+					useVariables: true,
+				},
+			],
+			callback: async (event) => {
+				const fileName = await self.parseVariablesInString(event.options.fileName)
+				sendOscMessage(`/oscpoint/presentations/activate`, [{ type: 's', value: fileName }])
 			},
 		},
 		closeFile: {
@@ -547,31 +563,48 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Action',
 					choices: [
-						{ id: 'increment', label: 'Scroll up list' },
-						{ id: 'decrement', label: 'Scroll down list' },
+						{ id: 'increment_1', label: 'Scroll up list 1' },
+						{ id: 'increment_10', label: 'Scroll up list 10' },
+						{ id: 'decrement_1', label: 'Scroll down list 1' },
+						{ id: 'decrement_10', label: 'Scroll down list 10' },
 					],
 					default: 'increment',
 				},
 			],
 			callback: async (event) => {
 				switch (event.options.action) {
-					case 'increment':
-						self.presentationIndex++
-						if (self.presentationIndex > self.presentationCount - 1) {
-							self.presentationIndex = 0
+					case 'increment_1':
+						self.presentationsIndex++
+						if (self.presentationsIndex > self.presentationsCount - 1) {
+							self.presentationsIndex = 0
 						}
 						break
-					case 'decrement':
-						self.presentationIndex--
-						if (self.presentationIndex < 0) {
-							self.presentationIndex = self.presentationCount - 1
+					case 'increment_10':
+						self.presentationsIndex + 10
+						if (self.presentationsIndex > self.presentationsCount - 1) {
+							self.presentationsIndex = 0
+						}
+						break
+					case 'decrement_1':
+						self.presentationsIndex--
+						if (self.presentationsIndex < 0) {
+							self.presentationsIndex = self.presentationsCount - 1
+						}
+						break
+					case 'decrement_10':
+						self.presentationsIndex = self.presentationsIndex - 10
+						if (self.presentationsIndex < 0) {
+							self.presentationsIndex = 0
 						}
 						break
 				}
-				self.log('debug', `Changing presentation index to ${self.presentationIndex}`)
-				let presentationName = self.presentations[self.presentationIndex].name
+				self.log('debug', `Changing presentation index to ${self.presentationsIndex}`)
+				let presentationName = self.presentations[self.presentationsIndex].name
 				self.log('debug', `Changing selected presentation name to: ${presentationName}`)
-				self.setVariableValues({ presentationsSelectedFilename: presentationName })
+				self.setVariableValues({
+					presentationsSelectedFilename: presentationName,
+					presentationsSelectedIndex: self.presentationsIndex + 1,
+				})
 			},
 		},
 	})

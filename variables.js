@@ -1,10 +1,14 @@
 module.exports = async function (self) {
 	self.setVariableDefinitions([
 		{ variableId: 'presentations', name: 'JSON array of all the presentations currently open' },
+		{ variableId: 'presentationsFileNames', name: 'Array of filenames for currently open presentations' },
 		{
-			variableId: 'presentationsSelectedFilename',
-			name: 'The filename of the selected presentation (used when selecting file to close)',
+			variableId: 'presentationsSelectedIndex',
+			name: 'Index of the selected presentation in the presentations array',
 		},
+		{ variableId: 'presentationsCount', name: 'Total number of presentations open' },
+		{ variableId: 'presentationsSelectedFilename', name: 'Filename of the selected presentation' },
+
 		{ variableId: 'presentation', name: 'JSON object with active presentation data' },
 		{ variableId: 'presentationName', name: 'Presentation filename' },
 		{ variableId: 'slideCount', name: 'Total slide count' },
@@ -28,7 +32,10 @@ module.exports = async function (self) {
 			variableId: 'fileAccessEnabled',
 			name: 'Do we have access to files on this machine? Must be set locally via OSCPoint tab in PowerPoint.',
 		},
-		{ variableId: 'files', name: 'JSON array of the .ppt and .pptx files in the active folder' },
+		{
+			variableId: 'files',
+			name: 'Array of JSON objects with data about the .ppt and .pptx files in the active folder',
+		},
 		{
 			variableId: 'activeFolder',
 			name: "The active folder on the remote machine, relative to the user's home directory.",
@@ -37,8 +44,9 @@ module.exports = async function (self) {
 			variableId: 'activeFolderFullPath',
 			name: 'The full path of active folder on the remote machine.',
 		},
+		{ variableId: 'activeFolderFileNames', name: 'Array of file names in active folder' },
 		{ variableId: 'activeFolderFileName', name: 'Name of selected file in active folder' },
-		{ variableId: 'activeFolderFileCount', name: 'Number of files n active folder' },
+		{ variableId: 'activeFolderFileCount', name: 'Number of files in active folder' },
 		{ variableId: 'activeFolderSelectedIndex', name: 'Index of selected file in active folder' },
 	])
 }

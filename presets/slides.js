@@ -1,0 +1,227 @@
+const { combineRgb } = require('@companion-module/base')
+const imgs = require('../imgs.js')
+
+module.exports = {
+	slidesActionHeader: {
+		category: 'Slide show control and feedback',
+		name: 'Slide control',
+		type: 'text',
+		text: 'Basic next/back controls',
+	},
+	prev: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Previous slide`,
+		style: {
+			text: `⮜`,
+			size: '30',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		steps: [{ down: [{ actionId: 'previous' }], up: [] }],
+		feedbacks: [],
+	},
+	next: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Next slide`,
+		style: {
+			text: '⮞',
+			size: '30',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 204, 0),
+		},
+		steps: [{ down: [{ actionId: 'next' }], up: [] }],
+		feedbacks: [],
+	},
+	slidesSlideshowHeader: {
+		category: 'Slide show control and feedback',
+		name: 'Slide show controls',
+		type: 'text',
+		text: 'Start, stop and control slide shows',
+	},
+	startSlideshowFromStart: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Start slide show from start`,
+		style: {
+			text: `Start`,
+			size: '14',
+			alignment: 'center:bottom',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			png64: imgs.startSlideshowFromStart,
+		},
+		steps: [{ down: [{ actionId: 'start_slideshow', options: { startPosition: 'top' } }], up: [] }],
+		feedbacks: [],
+	},
+	startSlideshowFromCurrent: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Start slide show from current slide`,
+		style: {
+			text: `Current`,
+			size: '14',
+			alignment: 'center:bottom',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			png64: imgs.startSlideshowFromCurrent,
+		},
+		steps: [{ down: [{ actionId: 'start_slideshow', options: { startPosition: 'currentSlide' } }], up: [] }],
+		feedbacks: [],
+	},
+	stopSlideshow: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `End slideshow`,
+		style: {
+			text: `End`,
+			size: '14',
+			alignment: 'center:bottom',
+			color: combineRgb(255, 0, 0),
+			bgcolor: combineRgb(0, 0, 0),
+			png64: imgs.endSlideshow,
+		},
+		steps: [{ down: [{ actionId: 'end_slideshow', options: {} }], up: [] }],
+		feedbacks: [],
+	},
+	white: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `White screen (toggle)`,
+		style: {
+			text: `White`,
+			size: '24',
+			color: combineRgb(0, 0, 0),
+			bgcolor: combineRgb(255, 255, 255),
+		},
+		steps: [{ down: [{ actionId: 'white_screen', options: { action: 'toggle' } }], up: [] }],
+		feedbacks: [],
+	},
+	black: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Black screen (toggle)`,
+		style: {
+			text: `Black`,
+			size: '24',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [{ down: [{ actionId: 'black_screen', options: { action: 'toggle' } }], up: [] }],
+		feedbacks: [],
+	},
+	laser: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Laser pointer (toggle)`,
+		style: {
+			text: `Laser pointer`,
+			size: '14',
+			alignment: 'center:bottom',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			png64: imgs.laser,
+		},
+		steps: [{ down: [{ actionId: 'laser', options: { action: 'toggle' } }], up: [] }],
+		feedbacks: [],
+	},
+	slidesFeedback: {
+		category: 'Slide show control and feedback',
+		name: 'Slide show feedback',
+		type: 'text',
+		text: 'Live slide show status reporting',
+	},
+	showState: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Show state`,
+		style: {
+			text: 'Show state:\n$(OSCPoint:state)',
+			size: '14',
+			color: combineRgb(0, 0, 0),
+			bgcolor: combineRgb(0, 200, 0),
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: 'showState',
+				options: {
+					state: 'slideshow',
+				},
+				style: {
+					color: combineRgb(255, 255, 255),
+					bgcolor: combineRgb(255, 0, 0),
+				},
+			},
+		],
+	},
+	presentationName: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `File name`,
+		style: {
+			text: 'File:\n$(OSCPoint:presentationName)',
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	slideNumbers: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Current/total slides`,
+		style: {
+			text: 'Slide\n$(OSCPoint:currentSlide)/$(OSCPoint:slideCount)',
+			size: '18',
+			alignment: 'center:top',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: 'slideProgressBars',
+				options: {
+					type: 'slide',
+				},
+			},
+		],
+	},
+	buildNumbers: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Current/total builds on slide`,
+		style: {
+			text: 'Build\n$(OSCPoint:buildPosition)/$(OSCPoint:buildCount)',
+			size: '18',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [],
+		feedbacks: [
+			{
+				feedbackId: 'slideProgressBars',
+				options: {
+					type: 'build',
+				},
+			},
+		],
+	},
+	notes: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Notes`,
+		style: {
+			text: 'Notes:\n$(OSCPoint:notesSnip)',
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [],
+		feedbacks: [],
+	},
+}
