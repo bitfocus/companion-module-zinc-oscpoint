@@ -86,27 +86,6 @@ module.exports = async function (self) {
 				return feedback.options.state == 'disabled'
 			},
 		},
-		// slidePreview: {
-		// 	type: 'advanced',
-		// 	name: 'Display slide preview',
-		// 	options: [],
-		// 	callback: async (feedback) => {
-		// 		self.log('debug', `Parsing PNG and rendering to button`)
-		// 		const png64 = self.getVariableValue('slidePreview')
-		// 		const icon = await graphics.parseBase64(png64, { alpha: true })
-		// 		const imageBuffer = graphics.icon({
-		// 			width: feedback.image.width,
-		// 			height: feedback.image.height,
-		// 			offsetX: 0,
-		// 			offsetY: 10,
-		// 			type: 'custom',
-		// 			custom: icon,
-		// 			customWidth: 72,
-		// 			customHeight: 40,
-		// 		})
-		// 		return { imageBuffer: imageBuffer }
-		// 	},
-		// },
 		slideProgressBars: {
 			type: 'advanced',
 			name: 'Slide/build/playhead progress bar',
@@ -237,7 +216,7 @@ module.exports = async function (self) {
 				self.log('debug', `Folder progress bar decimal: ${portion}`)
 
 				let preDot = blankSpace * portion
-				let postDot = blankSpace * (1-portion)
+				let postDot = blankSpace * (1 - portion)
 				self.log('debug', `pre/post height: ${preDot}/${postDot}`)
 
 				const options = {

@@ -13,9 +13,9 @@ const configFields = [
 	{
 		id: 'important-line',
 		type: 'static-text',
-		label: 'Remote IP and Port',
-		value: `The IP address and port of your PowerPoint machine.<br/>
-        Default remote port: <b>35551</b>. This can be changed using the OSCPoint ribbon tab in PowerPoint.`,
+		label: 'Setting up multiple PowerPoint machines?',
+		value: `Each machine will need it's own instance of OSCPoint, and you'll need to tweak the local port below to get feedback from both machines.<br/>
+		See the <a href='https://github.com/phuvf/oscpoint/blob/main/CONFIGURATION.md'>configuration examples</a> for full details.`,
 		width: 12,
 	},
 	{
@@ -37,9 +37,9 @@ const configFields = [
 	{
 		id: 'important-line',
 		type: 'static-text',
-		label: 'Local port',
-		value: `This is the port that this module will use to listen for OSC feedback messages from OSCPoint<br/>
-        Default local port: <b>35550</b>. This can be changed using the OSCPoint ribbon tab in PowerPoint.`,
+		label: '',
+		value: `The IP address and port of your remote PowerPoint machine.<br/>
+		Default remote port: <b>35551</b> - this can be changed using the OSCPoint ribbon tab in PowerPoint.`,
 		width: 12,
 	},
 	{
@@ -49,6 +49,14 @@ const configFields = [
 		width: 8,
 		regex: Regex.PORT,
 		default: 35550,
+	},
+	{
+		id: 'important-line',
+		type: 'static-text',
+		label: '',
+		value: `This is the port that this module will use to listen for OSC feedback messages from OSCPoint<br/>
+		Default local port: <b>35550</b> - this can be changed using the OSCPoint ribbon tab in PowerPoint.`,
+		width: 12,
 	},
 ]
 

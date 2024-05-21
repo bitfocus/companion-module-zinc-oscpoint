@@ -73,7 +73,7 @@ module.exports = {
 	stopSlideshow: {
 		type: 'button',
 		category: 'Slide show control and feedback',
-		name: `End slideshow`,
+		name: `End slide show`,
 		style: {
 			text: `End`,
 			size: '14',

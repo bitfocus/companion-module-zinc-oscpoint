@@ -107,7 +107,7 @@ module.exports = function (self) {
 			},
 		},
 		start_slideshow: {
-			name: 'Start slideshow',
+			name: 'Start slide show',
 			options: [
 				{
 					id: 'startPosition',
@@ -166,7 +166,7 @@ module.exports = function (self) {
 			},
 		},
 		end_slideshow: {
-			name: 'End slideshow',
+			name: 'End slide show',
 			options: [],
 			callback: async (_event) => {
 				sendOscMessage('/oscpoint/slideshow/end', [])
