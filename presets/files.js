@@ -1,10 +1,16 @@
 const { combineRgb } = require('@companion-module/base')
 module.exports = {
+	fileDescHeader: {
+		category: 'File management',
+		name: 'Note: File management features require OSCPoint add-in v2.0.0 or later.',
+		type: 'text',
+		text: `When enabled, OSCPoint will scan a specific folder (the active folder) for .ppt and .pptx files. Use the presets below to navigate through the file list and open the selected file in PowerPoint.`,
+	},
 	fileActionHeader: {
 		category: 'File management',
-		name: 'Actions',
+		name: 'Set active folder',
 		type: 'text',
-		text: 'Change file management configuration.',
+		text: `The active folder is always relative to the user's home directory. For example, setting the active folder to Desktop\\oscpoint will mean OSCPoint will look for PowerPoint presentations in C:\\Users\\[USERNAME]\\Desktop\\oscpoint`,
 	},
 	setActiveFolder: {
 		type: 'button',
@@ -25,7 +31,7 @@ module.exports = {
 		category: 'File management',
 		name: 'File list navigation',
 		type: 'text',
-		text: 'Navigate through the file list to select the file to open.',
+		text: 'Use these presets to navigate through the file list to select the file to open.',
 	},
 	plus1: {
 		type: 'button',
@@ -81,7 +87,7 @@ module.exports = {
 		name: `Selected file name`,
 		style: {
 			text: `Selected file: $(OSCPoint:activeFolderFileName)`,
-			size: 'auto',
+			size: '14',
 			color: combineRgb(255, 255, 255),
 			alignment: 'center:top',
 		},

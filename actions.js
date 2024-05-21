@@ -116,28 +116,46 @@ module.exports = function (self) {
 					choices: [
 						{ id: 'top', label: 'Top' },
 						{ id: 'currentSlide', label: 'Current slide' },
+						{ id: 'slideNumber', label: 'Slide number (add-in v2+ required)' },
 						{ id: 'section', label: 'Named section' },
 					],
 					default: 'top',
 				},
 				{
+					id: 'sectionName',
 					type: 'textinput',
 					label: 'Section name (case sensitive)',
-					id: 'sectionName',
 					default: 'Default Section',
 					isVisible: (options) => {
 						return options.startPosition == 'section'
 					},
 					useVariables: true,
 				},
+				{
+					id: 'slideNumber',
+					type: 'textinput',
+					label: 'Slide number',
+					default: '1',
+					isVisible: (options) => {
+						return options.startPosition == 'slideNumber'
+					},
+					useVariables: true,
+				},
 			],
 			callback: async (event) => {
+				let slideNumber
 				switch (event.options.startPosition) {
 					case 'top':
 						sendOscMessage('/oscpoint/slideshow/start', [])
 						break
 					case 'currentSlide':
 						sendOscMessage('/oscpoint/slideshow/start/current', [])
+						break
+					case 'slideNumber':
+						slideNumber = sanitiseSlideNumber(await self.parseVariablesInString(event.options.slideNumber), event)
+						if (slideNumber) {
+							sendOscMessage('/oscpoint/slideshow/start', [{ type: 'i', value: slideNumber }])
+						}
 						break
 					case 'section': {
 						const sectionName = await self.parseVariablesInString(event.options.sectionName)
