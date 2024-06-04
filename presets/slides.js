@@ -224,4 +224,23 @@ module.exports = {
 		steps: [],
 		feedbacks: [],
 	},
+	slidesMisc: {
+		category: 'Slide show control and feedback',
+		name: 'Miscellaneous',
+		type: 'text',
+		text: ' ',
+	},
+	setWallpaper: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Set wallpaper to current slide`,
+		style: {
+			text: 'Set wallpaper',
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 128),
+		},
+		steps: [{ down: [{ actionId: 'setWallpaper', options: { width: '1920', height: '1080' } }], up: [] }],
+		feedbacks: [],
+	},
 }
