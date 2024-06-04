@@ -259,6 +259,49 @@ module.exports = function (self) {
 				}
 			},
 		},
+		setWallpaper: {
+			name: 'Set desktop wallpaper from current slide',
+			options: [
+				{
+					type: 'textinput',
+					label: 'Image export width (px)',
+					id: 'width',
+					default: '1920',
+					useVariables: true,
+				},
+				{
+					type: 'textinput',
+					label: 'Image export height (px)',
+					id: 'height',
+					default: '1080',
+					useVariables: true,
+				},
+			],
+			callback: async (event) => {
+				let width = await self.parseVariablesInString(event.options.width)
+				let height = await self.parseVariablesInString(event.options.height)
+				//check width is an integer
+				width = parseInt(width)
+				if (isNaN(width)) {
+					width = 1920
+				}
+				width = Math.max(100, width)
+				width = Math.min(10000, width)
+
+				//check height is an integer
+				height = parseInt(height)
+				if (isNaN(height)) {
+					height = 1080
+				}
+				height = Math.max(100, height)
+				height = Math.min(10000, height)
+
+				sendOscMessage('/oscpoint/slideshow/setwallpaper', [
+					{ type: 'i', value: width },
+					{ type: 'i', value: height },
+				])
+			},
+		},
 		mediaTransport: {
 			name: 'Media play/pause/stop',
 			options: [
@@ -629,7 +672,10 @@ module.exports = function (self) {
 
 	const sendOscMessage = (path, args) => {
 		//self.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
-		console.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`)
+		console.log(
+			'debug',
+			`Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}${args.length > 1 ? args[1].value : ''}`
+		)
 		self.oscSend(self.config.remotehost, self.config.remoteport, path, args)
 	}
 
