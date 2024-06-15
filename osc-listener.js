@@ -273,7 +273,6 @@ const oscListener = {
 			sectionSlideCount: section.slideCount,
 			sectionFirstSlide: section.firstSlide,
 		})
-
 	},
 	setDefaultSectionVariables(self) {
 		return self.setVariableValues({
@@ -281,7 +280,7 @@ const oscListener = {
 			sectionSlideCount: 0,
 			sectionFirstSlide: 0,
 		})
-	}
+	},
 }
 
 module.exports = oscListener
