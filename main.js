@@ -19,9 +19,10 @@ class ModuleInstance extends InstanceBase {
 		this.fileIndex = 0
 		this.fileCount = 0
 		this.presentations = []
-		this.presentation = {}
+		this.presentation = { sections: [] }
 		this.presentationsIndex = 0
 		this.presentationsCount = 0
+		this.sectionIndex = 0
 		this.log('info', `OSCPoint module started`)
 		this.log('info', `Sending OSC actions to ${this.config.remotehost}:${this.config.remoteport}`)
 		this.updateStatus(InstanceStatus.Connecting, `Connecting to port ${this.config.localport}...`)

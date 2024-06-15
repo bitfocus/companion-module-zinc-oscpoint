@@ -19,6 +19,8 @@ module.exports = async function (self) {
 		{ variableId: 'buildsRemaining', name: 'Number of builds remaining on slide' },
 		{ variableId: 'sectionIndex', name: 'Section index' },
 		{ variableId: 'sectionName', name: 'Section name' },
+		{ variableId: 'sectionSlideCount', name: 'Number of slides in current section' },
+		{ variableId: 'sectionFirstSlide', name: 'Index of first slide in current section' },
 		{ variableId: 'notes', name: 'Current slide notes' },
 		{ variableId: 'notesSnip', name: 'Current slide notes (snippet)' },
 		{ variableId: 'mediaState', name: 'Media playback state' },

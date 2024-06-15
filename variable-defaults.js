@@ -15,6 +15,8 @@ const variableDefaults = {
     buildsRemaining: '-',
     sectionIndex: '-',
     sectionName: "(none)",
+    sectionSlideCount: 0,
+    sectionFirstSlide: 0,
     notes: "",
     notesSnip: "(none)",
     mediaState: "stopped",

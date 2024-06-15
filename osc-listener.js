@@ -55,6 +55,7 @@ const oscListener = {
 				} catch (e) {
 					self.presentationsCount = 0
 					self.presentationsIndex = 0
+					self.presentations = []
 					return self.log('error', `Error parsing presentations JSON: ${e}`)
 				}
 
@@ -85,6 +86,18 @@ const oscListener = {
 				break
 			}
 			case `/v2/presentation`: {
+				try {
+					self.presentation = JSON.parse(oscMsg.args[0].value)
+				} catch (e) {
+					self.presentation = { sections: [] }
+					return self.log('error', `Error parsing presentation JSON: ${e}`)
+				}
+
+				//make sure there's always a sections array
+				if (!self.presentation.sections) {
+					self.presentation.sections = []
+				}
+				this.setSectionVariables(self)
 				self.setVariableValues({ presentation: oscMsg.args[0].value })
 				break
 			}
@@ -165,7 +178,13 @@ const oscListener = {
 				self.setVariableValues({ buildsRemaining: oscMsg.args[0].value })
 				break
 			case `/slideshow/section/index`:
-				self.setVariableValues({ sectionIndex: oscMsg.args[0].value })
+				{
+					let i = parseInt(oscMsg.args[0].value)
+					//if nan, set to 0
+					if (isNaN(i)) i = 0
+					self.sectionIndex = i
+					this.setSectionVariables(self)
+				}
 				break
 			case `/slideshow/section/name`: {
 				let sectionName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
@@ -224,6 +243,45 @@ const oscListener = {
 			.padStart(2, '0')
 		return `${mm}:${ss}`
 	},
+	setSectionVariables(self) {
+		self.log('debug', `Setting section variables for section ${self.sectionIndex}`)
+		//self.log('debug', JSON.stringify(self.presentation))
+
+		//self.sectionIndex is 1-based
+		if (self.sectionIndex < 1) {
+			self.log('debug', `Section index is 0, setting defaults`)
+			return this.setDefaultSectionVariables(self)
+		}
+
+		if (!self.presentation || self.presentation == '{}') {
+			self.log('debug', `No presentation data, setting defaults`)
+			return this.setDefaultSectionVariables(self)
+		}
+
+		if (self.presentation.sections.length < self.sectionIndex) {
+			self.log('debug', `Section index out of range, setting defaults`)
+			return this.setDefaultSectionVariables(self)
+		}
+
+		let section = self.presentation.sections[self.sectionIndex - 1]
+		self.log(
+			'debug',
+			`Section ${self.sectionIndex} (${section.name}):  ${section.slideCount} slides, starting at slide ${section.firstSlide}`
+		)
+		self.setVariableValues({
+			sectionName: section.name,
+			sectionSlideCount: section.slideCount,
+			sectionFirstSlide: section.firstSlide,
+		})
+
+	},
+	setDefaultSectionVariables(self) {
+		return self.setVariableValues({
+			sectionName: '(none)',
+			sectionSlideCount: 0,
+			sectionFirstSlide: 0,
+		})
+	}
 }
 
 module.exports = oscListener
