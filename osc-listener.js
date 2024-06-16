@@ -18,7 +18,7 @@ const oscListener = {
 		this.udpPort.open()
 
 		this.udpPort.on('ready', () => {
-			self.log('info', `Listening for OSCPoint messsages on port ${self.config.localport}`)
+			self.log('info', `Listening for OSCPoint messages on port ${self.config.localport}`)
 			self.updateStatus(InstanceStatus.Ok, 'Connected.')
 
 			//send a refresh request to OSCPoint
@@ -42,7 +42,7 @@ const oscListener = {
 	},
 
 	processData: function (oscMsg, self) {
-		self.log('debug', `OSC message received: ${oscMsg.address} ${oscMsg.args[0].value}`)
+		self.log('info', `OSC message received: ${oscMsg.address} ${oscMsg.args[0].value}`)
 		const msgParts = oscMsg.address.split('/')
 		if (msgParts[1] != 'oscpoint') return
 		const feedbackId = oscMsg.address.substring(9)

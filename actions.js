@@ -524,7 +524,7 @@ module.exports = function (self) {
 		},
 		closeFile: {
 			name: 'Close presentation',
-			description: 'Close an open presentation file.',
+			description: 'Close an open presentation file. Specify file name, or leave blank to close active presentation.',
 			options: [
 				{
 					type: 'textinput',
@@ -533,10 +533,37 @@ module.exports = function (self) {
 					default: 'my_presentation.pptx',
 					useVariables: true,
 				},
+				{
+					id: 'unsavedAction',
+					type: 'dropdown',
+					label: 'If file contains unsaved changes:',
+					choices: [
+						{ id: 'abort', label: 'Abort close action' },
+						{ id: 'save', label: 'Save changes, overwriting original file' },
+						{ id: 'force', label: 'Discard changes & force close' },
+					],
+					default: 'abort',
+				},
 			],
 			callback: async (event) => {
-				const fileName = await self.parseVariablesInString(event.options.fileName)
-				sendOscMessage(`/oscpoint/files/close`, [{ type: 's', value: fileName }])
+				let args = []
+				let fileName = await self.parseVariablesInString(event.options.fileName)
+				if (fileName.length > 0) {
+					fileName = fileName.trim()
+					args.push({ type: 's', value: fileName })
+				}
+
+				switch (event.options.unsavedAction) {
+					case 'abort':
+						sendOscMessage(`/oscpoint/files/close`, args)
+						break
+					case 'save':
+						sendOscMessage(`/oscpoint/files/close/save`, args)
+						break
+					case 'force':
+						sendOscMessage(`/oscpoint/files/close/force`, args)
+						break
+				}
 			},
 		},
 		setActiveFolder: {
@@ -673,7 +700,7 @@ module.exports = function (self) {
 	const sendOscMessage = (path, args) => {
 		//self.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
 		console.log(
-			'debug',
+			'info',
 			`Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}${args.length > 1 ? args[1].value : ''}`
 		)
 		self.oscSend(self.config.remotehost, self.config.remoteport, path, args)
