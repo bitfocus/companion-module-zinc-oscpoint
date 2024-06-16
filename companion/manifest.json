@@ -1,5 +1,5 @@
 {
-	"id": "oscpoint",
+	"id": "zinc-oscpoint",
 	"name": "OSCPoint",
 	"shortname": "OSCPoint",
 	"description": "OSCPoint is a PowerPoint add-in that allows Open Sound Control (OSC) control of PowerPoint on Windows.",
@@ -10,7 +10,8 @@
 	"maintainers": [
 		{
 			"name": "Nick Roberts",
-			"email": "nick@zinc.uk.com"
+			"email": "nick@zinc.uk.com",
+			"github": "phuvf"
 		}
 	],
 	"runtime": {
@@ -19,8 +20,8 @@
 		"apiVersion": "0.0.0",
 		"entrypoint": "../main.js"
 	},
-	"legacyIds": [],
+	"legacyIds": ["oscpoint"],
 	"manufacturer": "Zinc",
 	"products": ["OSCPoint"],
-	"keywords": []
+	"keywords": ["PowerPoint", "OSC", "Open Sound Control"]
 }
