@@ -1,4 +1,4 @@
-const { Regex } = require('@companion-module/base')
+// const { Regex } = require('@companion-module/base')
 
 module.exports = function (self) {
 	self.setActionDefinitions({
@@ -24,7 +24,7 @@ module.exports = function (self) {
 					label: 'Slide number',
 					id: 'slideNumber',
 					default: '1',
-					regex: Regex.SIGNED_NUMBER,
+					//regex: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
@@ -74,7 +74,7 @@ module.exports = function (self) {
 					label: 'Slide number',
 					id: 'slideNumber',
 					default: '1',
-					regex: Regex.SIGNED_NUMBER,
+					//: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
@@ -94,7 +94,7 @@ module.exports = function (self) {
 					label: 'Slide number',
 					id: 'slideNumber',
 					default: '1',
-					regex: Regex.SIGNED_NUMBER,
+					//regex: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
@@ -361,7 +361,7 @@ module.exports = function (self) {
 					label: 'Milliseconds',
 					id: 'posMs',
 					default: '1',
-					regex: Regex.NUMBER,
+					//regex: Regex.NUMBER,
 					useVariables: true,
 					isVisible: (options) => {
 						return options.type != 'percent'
@@ -372,7 +372,7 @@ module.exports = function (self) {
 					label: 'Percent',
 					id: 'posPercent',
 					default: '50',
-					regex: Regex.FLOAT,
+					//regex: Regex.FLOAT,
 					useVariables: true,
 					isVisible: (options) => {
 						return options.type == 'percent'
