@@ -19,6 +19,8 @@ const variableDefaults = {
     sectionFirstSlide: 0,
     notes: "",
     notesSnip: "(none)",
+    notesUtf8: "",
+    notesSnipUtf8: "(none)",
     mediaState: "stopped",
     mediaDuration: 0,
     mediaDurationFormatted: "--:--",

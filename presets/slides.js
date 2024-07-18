@@ -211,12 +211,37 @@ module.exports = {
 			},
 		],
 	},
+	slidesNotesAscii: {
+		category: 'Slide show control and feedback',
+		name: 'Slide notes (ASCII)',
+		type: 'text',
+		text: 'Compatible with older versions of the add-in, but no international character support',
+	},
 	notes: {
 		type: 'button',
 		category: 'Slide show control and feedback',
 		name: `Notes`,
 		style: {
 			text: 'Notes:\n$(OSCPoint:notesSnip)',
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		steps: [],
+		feedbacks: [],
+	},
+	slidesNotesUTF8: {
+		category: 'Slide show control and feedback',
+		name: 'Slide notes (UTF8)',
+		type: 'text',
+		text: 'International character support, but requires add-in v2+',
+	},
+	notesUtf8: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Notes`,
+		style: {
+			text: 'Notes:\n$(OSCPoint:notesSnipUtf8)',
 			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),

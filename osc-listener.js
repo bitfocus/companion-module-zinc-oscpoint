@@ -200,6 +200,18 @@ const oscListener = {
 				})
 				break
 			}
+			case `/slideshow/notes-utf8`: {
+				//decode oscMsg.args[0] as UTF8
+				let n = Buffer.from(oscMsg.args[0].value, 'base64').toString('utf8')
+				let ns = n == '' ? '(none)' : `${n.substr(0, 20)}...`
+				let notes = n == '' ? '(none)' : n
+				self.log('debug', n)
+				self.setVariableValues({
+					notesUtf8: notes,
+					notesSnipUtf8: ns,
+				})
+				break
+			}
 			case `/slideshow/media/state`:
 				self.setVariableValues({ mediaState: oscMsg.args[0].value })
 				self.checkFeedbacks('mediaState')
