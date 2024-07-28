@@ -284,6 +284,7 @@ const oscListener = {
 			sectionName: section.name,
 			sectionSlideCount: section.slideCount,
 			sectionFirstSlide: section.firstSlide,
+			sectionIndex: self.sectionIndex,
 		})
 	},
 	setDefaultSectionVariables(self) {
@@ -291,6 +292,7 @@ const oscListener = {
 			sectionName: '(none)',
 			sectionSlideCount: 0,
 			sectionFirstSlide: 0,
+			sectionIndex: 0,
 		})
 	},
 }
