@@ -3,7 +3,7 @@
 	"name": "OSCPoint",
 	"shortname": "OSCPoint",
 	"description": "OSCPoint is a PowerPoint add-in that allows Open Sound Control (OSC) control of PowerPoint on Windows.",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-zinc-oscpoint.git",
 	"bugs": "https://github.com/bitfocus/companion-module-zinc-oscpoint/issues",
