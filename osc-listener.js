@@ -1,5 +1,6 @@
 const osc = require('osc')
 const { InstanceStatus } = require('@companion-module/base')
+const textHelper = require('./text-helper')
 
 const oscListener = {
 	close: async function () {
@@ -49,9 +50,10 @@ const oscListener = {
 
 		switch (feedbackId) {
 			case `/v2/presentations`: {
-				self.setVariableValues({ presentations: oscMsg.args[0].value })
+				let presentationsJson = textHelper.extractText(oscMsg.args, self)
+				self.setVariableValues({ presentations: presentationsJson })
 				try {
-					self.presentations = JSON.parse(oscMsg.args[0].value)
+					self.presentations = JSON.parse(presentationsJson)
 				} catch (e) {
 					self.presentationsCount = 0
 					self.presentationsIndex = 0
@@ -86,8 +88,9 @@ const oscListener = {
 				break
 			}
 			case `/v2/presentation`: {
+				let presentationJson = textHelper.extractText(oscMsg.args, self)
 				try {
-					self.presentation = JSON.parse(oscMsg.args[0].value)
+					self.presentation = JSON.parse(presentationJson)
 				} catch (e) {
 					self.presentation = { sections: [] }
 					return self.log('error', `Error parsing presentation JSON: ${e}`)
@@ -98,13 +101,14 @@ const oscListener = {
 					self.presentation.sections = []
 				}
 				this.setSectionVariables(self)
-				self.setVariableValues({ presentation: oscMsg.args[0].value })
+				self.setVariableValues({ presentation: presentationJson })
 				break
 			}
 			case `/v2/files`: {
-				self.setVariableValues({ files: oscMsg.args[0].value })
+				let filesJson = textHelper.extractText(oscMsg.args, self)
+				self.setVariableValues({ files: filesJson })
 				try {
-					self.files = JSON.parse(oscMsg.args[0].value)
+					self.files = JSON.parse(filesJson)
 				} catch (e) {
 					self.fileCount = 0
 					self.fileIndex = 0
@@ -145,16 +149,17 @@ const oscListener = {
 				break
 			}
 			case `/v2/files/activefolder`: {
-				self.setVariableValues({ activeFolder: oscMsg.args[0].value })
+				self.setVariableValues({ activeFolder: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/v2/files/activefolder/fullpath`: {
-				self.setVariableValues({ activeFolderFullPath: oscMsg.args[0].value })
+				self.setVariableValues({ activeFolderFullPath: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/presentation/name`: {
-				let fileName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
-				self.setVariableValues({ presentationName: fileName })
+				//let fileName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+
+				self.setVariableValues({ presentationName: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/presentation/slides/count`:
@@ -187,28 +192,28 @@ const oscListener = {
 				}
 				break
 			case `/slideshow/section/name`: {
-				let sectionName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
-				self.setVariableValues({ sectionName: sectionName })
+				self.setVariableValues({ sectionName: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
-			case `/slideshow/notes`: {
-				let ns = oscMsg.args[0].value == '' ? '(none)' : `${oscMsg.args[0].value.substr(0, 20)}...`
-				let notes = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+			// case `/slideshow/notes`: {
+			// 	let ns = oscMsg.args[0].value == '' ? '(none)' : `${oscMsg.args[0].value.substr(0, 20)}`
+			// 	ns += oscMsg.args[0].value.length > 20 ? '...' : ''
+			// 	let notes = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+			// 	self.setVariableValues({
+			// 		notes: notes,
+			// 		notesSnip: ns,
+			// 	})
+			// 	break
+			// }
+			case `/slideshow/notes-utf-8`: {
+				//decode oscMsg.args[0] as UTF8
+				let n = Buffer.from(oscMsg.args[0].value).toString('utf8')
+				let ns = n == '' ? '(none)' : `${n.substr(0, 20)}`
+				ns += n.length > 20 ? '...' : ''
+				let notes = n == '' ? '(none)' : n
 				self.setVariableValues({
 					notes: notes,
 					notesSnip: ns,
-				})
-				break
-			}
-			case `/slideshow/notes-utf8`: {
-				//decode oscMsg.args[0] as UTF8
-				let n = Buffer.from(oscMsg.args[0].value, 'base64').toString('utf8')
-				let ns = n == '' ? '(none)' : `${n.substr(0, 20)}...`
-				let notes = n == '' ? '(none)' : n
-				self.log('debug', n)
-				self.setVariableValues({
-					notesUtf8: notes,
-					notesSnipUtf8: ns,
 				})
 				break
 			}
