@@ -43,7 +43,13 @@ const oscListener = {
 	},
 
 	processData: function (oscMsg, self) {
-		self.log('info', `OSC message received: ${oscMsg.address} ${oscMsg.args[0].value}`)
+		//truncate the message arg if it's too long
+		let argLog = oscMsg.args[0].value
+		if (typeof oscMsg.args[0].value === 'string' && oscMsg.args[0].value.length > 100) {
+			argLog = oscMsg.args[0].value.substring(0, 100) + '...'
+		}
+
+		self.log('info', `OSC message received: ${oscMsg.address} ${argLog}`)
 		const msgParts = oscMsg.address.split('/')
 		if (msgParts[1] != 'oscpoint') return
 		const feedbackId = oscMsg.address.substring(9)
@@ -165,12 +171,18 @@ const oscListener = {
 			case `/presentation/slides/count`:
 				self.setVariableValues({ slideCount: oscMsg.args[0].value })
 				break
+			case `/presentation/slides/count/visible`:
+				self.setVariableValues({ slideCountVisible: oscMsg.args[0].value })
+				break
 			case `/slideshow/state`:
 				self.setVariableValues({ state: oscMsg.args[0].value })
 				self.checkFeedbacks('showState')
 				break
 			case `/slideshow/currentslide`:
 				self.setVariableValues({ currentSlide: oscMsg.args[0].value })
+				break
+			case `/slideshow/slidesremaining`:
+				self.setVariableValues({ slidesRemaining: oscMsg.args[0].value })
 				break
 			case `/slideshow/builds/position`:
 				self.setVariableValues({ buildPosition: oscMsg.args[0].value })
@@ -193,6 +205,10 @@ const oscListener = {
 				break
 			case `/slideshow/section/name`: {
 				self.setVariableValues({ sectionName: textHelper.extractText(oscMsg.args, self) })
+				break
+			}
+			case `/slideshow/section/slidesremaining`: {
+				self.setVariableValues({ sectionSlidesRemaining: oscMsg.args[0].value })
 				break
 			}
 			// case `/slideshow/notes`: {
@@ -226,6 +242,9 @@ const oscListener = {
 			case `/slideshow/media/duration`:
 				this.mediaDuration = oscMsg.args[0].value
 				break
+			case `/slideshow/media/durationtrimmed`:
+				this.mediaDurationTrimmed = oscMsg.args[0].value
+				break
 			case `/slideshow/media/position`:
 				this.mediaPosition = oscMsg.args[0].value
 				self.checkFeedbacks('mediaProgressBar')
@@ -235,10 +254,24 @@ const oscListener = {
 				self.setVariableValues({
 					mediaDuration: Math.floor(this.mediaDuration / 1000),
 					mediaDurationFormatted: this.convertToMmSs(this.mediaDuration),
+					mediaDurationTrimmed: Math.floor(this.mediaDurationTrimmed / 1000),
+					mediaDurationTrimmedFormatted: this.convertToMmSs(this.mediaDurationTrimmed),
 					mediaPosition: Math.floor(this.mediaPosition / 1000),
 					mediaPositionFormatted: this.convertToMmSs(this.mediaPosition),
 					mediaRemaining: Math.floor(this.mediaRemaining / 1000),
 					mediaRemainingFormatted: this.convertToMmSs(this.mediaRemaining),
+				})
+				break
+			case `/slideshow/media/startpoint`:
+				this.mediaStartPoint = oscMsg.args[0].value
+				self.setVariableValues({
+					mediaStartPoint: Math.floor(oscMsg.args[0].value),
+				})
+				break
+			case `/slideshow/media/endpoint`:
+				this.mediaEndPoint = oscMsg.args[0].value
+				self.setVariableValues({
+					mediaEndPoint: Math.floor(oscMsg.args[0].value),
 				})
 				break
 			case `/slide/current/preview`:
@@ -285,11 +318,27 @@ const oscListener = {
 			'debug',
 			`Section ${self.sectionIndex} (${section.name}):  ${section.slideCount} slides, starting at slide ${section.firstSlide}`
 		)
+
+		const previousSection = self.sectionIndex == 1 ? {} : self.presentation.sections[self.sectionIndex - 2]
+		const previousSectionName = previousSection.name ? previousSection.name : 'Start of deck'
+		const previousSectionFirstSlide = previousSection.firstSlide ? previousSection.firstSlide : 1
+
+		const nextSection =
+			self.sectionIndex == self.presentation.sections.length ? {} : self.presentation.sections[self.sectionIndex]
+		const nextSectionName = nextSection.name ? nextSection.name : 'End of deck'
+		const nextSectionFirstSlide = nextSection.firstSlide ? nextSection.firstSlide : self.presentation.slideCount
+
+		self.log('debug', `Previous section: ${previousSection.name}, next section: ${nextSection.name}`)
+
 		self.setVariableValues({
 			sectionName: section.name,
 			sectionSlideCount: section.slideCount,
 			sectionFirstSlide: section.firstSlide,
 			sectionIndex: self.sectionIndex,
+			previousSectionName: previousSectionName,
+			previousSectionFirstSlide: previousSectionFirstSlide,
+			nextSectionName: nextSectionName,
+			nextSectionFirstSlide: nextSectionFirstSlide,
 		})
 	},
 	setDefaultSectionVariables(self) {
@@ -298,6 +347,10 @@ const oscListener = {
 			sectionSlideCount: 0,
 			sectionFirstSlide: 0,
 			sectionIndex: 0,
+			previousSectionName: 'Start of deck',
+			previousSectionFirstSlide: 0,
+			nextSectionName: 'End of deck',
+			nextSectionFirstSlide: 0,
 		})
 	},
 }

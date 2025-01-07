@@ -348,8 +348,8 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Reference',
 					choices: [
-						{ id: 'start', label: 'From start of clip' },
-						{ id: 'end', label: 'Before end of clip' },
+						{ id: 'start', label: 'From clip start point' },
+						{ id: 'end', label: 'Before clip end point' },
 						{ id: 'forward', label: 'Forward from current position' },
 						{ id: 'back', label: 'Rewind from current position' },
 						{ id: 'percent', label: '%age of way through clip' },
