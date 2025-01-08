@@ -16,6 +16,26 @@ module.exports = function (self) {
 				sendOscMessage('/oscpoint/previous', [])
 			},
 		},
+		nextSection: {
+			name: 'Jump to first slide of next section',
+			options: [],
+			callback: async (event) => {
+				let slideNumber = await self.getVariableValue('nextSectionFirstSlide')
+				self.log('debug', `Going to slide ${slideNumber}`)
+				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }])
+			},
+		},
+		previousSection: {
+			name: 'Jump to first slide of previous section',
+			options: [],
+			callback: async (event) => {
+				let slideNumber = await self.getVariableValue('previousSectionFirstSlide')
+				self.log('debug', `Going to slide ${slideNumber}`)
+				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }])
+			},
+		},
 		goto_slide_number: {
 			name: 'Goto slide number',
 			options: [
@@ -302,6 +322,29 @@ module.exports = function (self) {
 				])
 			},
 		},
+
+		slideShowPauseResume: {
+			name: 'Pause/resume slide show auto-advance',
+			options: [
+				{
+					id: 'action',
+					type: 'dropdown',
+					label: 'Action',
+					choices: [
+						{ id: 'pause', label: 'Pause' },
+						{ id: 'resume', label: 'Resume' },
+					],
+					default: 'pause',
+				},
+			],
+			callback: async (event) => {
+				if (event.options.action == 'pause') {
+					sendOscMessage('/oscpoint/slideshow/pause', [])
+				} else {
+					sendOscMessage('/oscpoint/slideshow/resume', [])
+				}
+			},
+		},
 		mediaTransport: {
 			name: 'Media play/pause/stop',
 			options: [
@@ -348,8 +391,8 @@ module.exports = function (self) {
 					type: 'dropdown',
 					label: 'Reference',
 					choices: [
-						{ id: 'start', label: 'From start of clip' },
-						{ id: 'end', label: 'Before end of clip' },
+						{ id: 'start', label: 'From clip start point' },
+						{ id: 'end', label: 'Before clip end point' },
 						{ id: 'forward', label: 'Forward from current position' },
 						{ id: 'back', label: 'Rewind from current position' },
 						{ id: 'percent', label: '%age of way through clip' },

@@ -144,8 +144,8 @@ module.exports = async function (self) {
 				},
 			],
 			callback: (feedback) => {
-				let posPercent = (self.getVariableValue('mediaPosition') / self.getVariableValue('mediaDuration')) * 100
-				let remainingSeconds = self.getVariableValue('mediaDuration') - self.getVariableValue('mediaPosition')
+				let posPercent = (self.getVariableValue('mediaPosition') / self.getVariableValue('mediaDurationTrimmed')) * 100
+				let remainingSeconds = self.getVariableValue('mediaDurationTrimmed') - self.getVariableValue('mediaPosition')
 				let colors
 				let val
 				switch (feedback.options.type) {

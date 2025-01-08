@@ -112,7 +112,7 @@ module.exports = {
 		category: 'Media control and feedback',
 		name: `Media duration`,
 		style: {
-			text: `Duration:\n$(OSCPoint:mediaDurationFormatted)`,
+			text: `Duration:\n$(OSCPoint:mediaDurationTrimmedFormatted)`,
 			size: '14',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
@@ -161,5 +161,19 @@ module.exports = {
 				},
 			},
 		],
+	},
+	mediaStartEndPoints: {
+		type: 'button',
+		category: 'Media control and feedback',
+		name: `Start/end points`,
+		style: {
+			text: `In:\n$(OSCPoint:mediaStartPoint)ms\n Out:\n$(OSCPoint:mediaEndPoint)ms`,
+			size: '12',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+			alignment: 'center:top',
+		},
+		steps: [],
+		feedbacks: [],
 	},
 }

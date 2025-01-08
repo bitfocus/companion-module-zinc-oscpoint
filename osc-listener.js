@@ -1,5 +1,6 @@
 const osc = require('osc')
 const { InstanceStatus } = require('@companion-module/base')
+const textHelper = require('./text-helper')
 
 const oscListener = {
 	close: async function () {
@@ -42,16 +43,23 @@ const oscListener = {
 	},
 
 	processData: function (oscMsg, self) {
-		self.log('info', `OSC message received: ${oscMsg.address} ${oscMsg.args[0].value}`)
+		//truncate the message arg if it's too long
+		let argLog = oscMsg.args[0].value
+		if (typeof oscMsg.args[0].value === 'string' && oscMsg.args[0].value.length > 100) {
+			argLog = oscMsg.args[0].value.substring(0, 100) + '...'
+		}
+
+		self.log('info', `OSC message received: ${oscMsg.address} ${argLog}`)
 		const msgParts = oscMsg.address.split('/')
 		if (msgParts[1] != 'oscpoint') return
 		const feedbackId = oscMsg.address.substring(9)
 
 		switch (feedbackId) {
 			case `/v2/presentations`: {
-				self.setVariableValues({ presentations: oscMsg.args[0].value })
+				let presentationsJson = textHelper.extractText(oscMsg.args, self)
+				self.setVariableValues({ presentations: presentationsJson })
 				try {
-					self.presentations = JSON.parse(oscMsg.args[0].value)
+					self.presentations = JSON.parse(presentationsJson)
 				} catch (e) {
 					self.presentationsCount = 0
 					self.presentationsIndex = 0
@@ -86,8 +94,9 @@ const oscListener = {
 				break
 			}
 			case `/v2/presentation`: {
+				let presentationJson = textHelper.extractText(oscMsg.args, self)
 				try {
-					self.presentation = JSON.parse(oscMsg.args[0].value)
+					self.presentation = JSON.parse(presentationJson)
 				} catch (e) {
 					self.presentation = { sections: [] }
 					return self.log('error', `Error parsing presentation JSON: ${e}`)
@@ -98,13 +107,14 @@ const oscListener = {
 					self.presentation.sections = []
 				}
 				this.setSectionVariables(self)
-				self.setVariableValues({ presentation: oscMsg.args[0].value })
+				self.setVariableValues({ presentation: presentationJson })
 				break
 			}
 			case `/v2/files`: {
-				self.setVariableValues({ files: oscMsg.args[0].value })
+				let filesJson = textHelper.extractText(oscMsg.args, self)
+				self.setVariableValues({ files: filesJson })
 				try {
-					self.files = JSON.parse(oscMsg.args[0].value)
+					self.files = JSON.parse(filesJson)
 				} catch (e) {
 					self.fileCount = 0
 					self.fileIndex = 0
@@ -145,20 +155,24 @@ const oscListener = {
 				break
 			}
 			case `/v2/files/activefolder`: {
-				self.setVariableValues({ activeFolder: oscMsg.args[0].value })
+				self.setVariableValues({ activeFolder: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/v2/files/activefolder/fullpath`: {
-				self.setVariableValues({ activeFolderFullPath: oscMsg.args[0].value })
+				self.setVariableValues({ activeFolderFullPath: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/presentation/name`: {
-				let fileName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
-				self.setVariableValues({ presentationName: fileName })
+				//let fileName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+
+				self.setVariableValues({ presentationName: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
 			case `/presentation/slides/count`:
 				self.setVariableValues({ slideCount: oscMsg.args[0].value })
+				break
+			case `/presentation/slides/count/visible`:
+				self.setVariableValues({ slideCountVisible: oscMsg.args[0].value })
 				break
 			case `/slideshow/state`:
 				self.setVariableValues({ state: oscMsg.args[0].value })
@@ -166,6 +180,9 @@ const oscListener = {
 				break
 			case `/slideshow/currentslide`:
 				self.setVariableValues({ currentSlide: oscMsg.args[0].value })
+				break
+			case `/slideshow/slidesremaining`:
+				self.setVariableValues({ slidesRemaining: oscMsg.args[0].value })
 				break
 			case `/slideshow/builds/position`:
 				self.setVariableValues({ buildPosition: oscMsg.args[0].value })
@@ -187,28 +204,32 @@ const oscListener = {
 				}
 				break
 			case `/slideshow/section/name`: {
-				let sectionName = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
-				self.setVariableValues({ sectionName: sectionName })
+				self.setVariableValues({ sectionName: textHelper.extractText(oscMsg.args, self) })
 				break
 			}
-			case `/slideshow/notes`: {
-				let ns = oscMsg.args[0].value == '' ? '(none)' : `${oscMsg.args[0].value.substr(0, 20)}...`
-				let notes = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+			case `/slideshow/section/slidesremaining`: {
+				self.setVariableValues({ sectionSlidesRemaining: oscMsg.args[0].value })
+				break
+			}
+			// case `/slideshow/notes`: {
+			// 	let ns = oscMsg.args[0].value == '' ? '(none)' : `${oscMsg.args[0].value.substr(0, 20)}`
+			// 	ns += oscMsg.args[0].value.length > 20 ? '...' : ''
+			// 	let notes = oscMsg.args[0].value == '' ? '(none)' : oscMsg.args[0].value
+			// 	self.setVariableValues({
+			// 		notes: notes,
+			// 		notesSnip: ns,
+			// 	})
+			// 	break
+			// }
+			case `/slideshow/notes-utf-8`: {
+				//decode oscMsg.args[0] as UTF8
+				let n = Buffer.from(oscMsg.args[0].value).toString('utf8')
+				let ns = n == '' ? '(none)' : `${n.substr(0, 20)}`
+				ns += n.length > 20 ? '...' : ''
+				let notes = n == '' ? '(none)' : n
 				self.setVariableValues({
 					notes: notes,
 					notesSnip: ns,
-				})
-				break
-			}
-			case `/slideshow/notes-utf8`: {
-				//decode oscMsg.args[0] as UTF8
-				let n = Buffer.from(oscMsg.args[0].value, 'base64').toString('utf8')
-				let ns = n == '' ? '(none)' : `${n.substr(0, 20)}...`
-				let notes = n == '' ? '(none)' : n
-				self.log('debug', n)
-				self.setVariableValues({
-					notesUtf8: notes,
-					notesSnipUtf8: ns,
 				})
 				break
 			}
@@ -221,6 +242,9 @@ const oscListener = {
 			case `/slideshow/media/duration`:
 				this.mediaDuration = oscMsg.args[0].value
 				break
+			case `/slideshow/media/durationtrimmed`:
+				this.mediaDurationTrimmed = oscMsg.args[0].value
+				break
 			case `/slideshow/media/position`:
 				this.mediaPosition = oscMsg.args[0].value
 				self.checkFeedbacks('mediaProgressBar')
@@ -230,10 +254,24 @@ const oscListener = {
 				self.setVariableValues({
 					mediaDuration: Math.floor(this.mediaDuration / 1000),
 					mediaDurationFormatted: this.convertToMmSs(this.mediaDuration),
+					mediaDurationTrimmed: Math.floor(this.mediaDurationTrimmed / 1000),
+					mediaDurationTrimmedFormatted: this.convertToMmSs(this.mediaDurationTrimmed),
 					mediaPosition: Math.floor(this.mediaPosition / 1000),
 					mediaPositionFormatted: this.convertToMmSs(this.mediaPosition),
 					mediaRemaining: Math.floor(this.mediaRemaining / 1000),
 					mediaRemainingFormatted: this.convertToMmSs(this.mediaRemaining),
+				})
+				break
+			case `/slideshow/media/startpoint`:
+				this.mediaStartPoint = oscMsg.args[0].value
+				self.setVariableValues({
+					mediaStartPoint: Math.floor(oscMsg.args[0].value),
+				})
+				break
+			case `/slideshow/media/endpoint`:
+				this.mediaEndPoint = oscMsg.args[0].value
+				self.setVariableValues({
+					mediaEndPoint: Math.floor(oscMsg.args[0].value),
 				})
 				break
 			case `/slide/current/preview`:
@@ -280,11 +318,27 @@ const oscListener = {
 			'debug',
 			`Section ${self.sectionIndex} (${section.name}):  ${section.slideCount} slides, starting at slide ${section.firstSlide}`
 		)
+
+		const previousSection = self.sectionIndex == 1 ? {} : self.presentation.sections[self.sectionIndex - 2]
+		const previousSectionName = previousSection.name ? previousSection.name : 'Start of deck'
+		const previousSectionFirstSlide = previousSection.firstSlide ? previousSection.firstSlide : 1
+
+		const nextSection =
+			self.sectionIndex == self.presentation.sections.length ? {} : self.presentation.sections[self.sectionIndex]
+		const nextSectionName = nextSection.name ? nextSection.name : 'End of deck'
+		const nextSectionFirstSlide = nextSection.firstSlide ? nextSection.firstSlide : self.presentation.slideCount
+
+		self.log('debug', `Previous section: ${previousSection.name}, next section: ${nextSection.name}`)
+
 		self.setVariableValues({
 			sectionName: section.name,
 			sectionSlideCount: section.slideCount,
 			sectionFirstSlide: section.firstSlide,
 			sectionIndex: self.sectionIndex,
+			previousSectionName: previousSectionName,
+			previousSectionFirstSlide: previousSectionFirstSlide,
+			nextSectionName: nextSectionName,
+			nextSectionFirstSlide: nextSectionFirstSlide,
 		})
 	},
 	setDefaultSectionVariables(self) {
@@ -293,6 +347,10 @@ const oscListener = {
 			sectionSlideCount: 0,
 			sectionFirstSlide: 0,
 			sectionIndex: 0,
+			previousSectionName: 'Start of deck',
+			previousSectionFirstSlide: 0,
+			nextSectionName: 'End of deck',
+			nextSectionFirstSlide: 0,
 		})
 	},
 }
