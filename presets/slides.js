@@ -6,7 +6,7 @@ module.exports = {
 		category: 'Slide show control and feedback',
 		name: 'Slide control',
 		type: 'text',
-		text: 'Basic next/back controls',
+		text: 'Move though slide show',
 	},
 	prev: {
 		type: 'button',
@@ -32,6 +32,32 @@ module.exports = {
 			bgcolor: combineRgb(0, 204, 0),
 		},
 		steps: [{ down: [{ actionId: 'next' }], up: [] }],
+		feedbacks: [],
+	},
+	prevSection: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Previous section`,
+		style: {
+			text: `⮜\nSection`,
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
+		},
+		steps: [{ down: [{ actionId: 'previousSection' }], up: [] }],
+		feedbacks: [],
+	},
+	nextSection: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Next section`,
+		style: {
+			text: `⮞\nSection`,
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 204, 0),
+		},
+		steps: [{ down: [{ actionId: 'nextSection' }], up: [] }],
 		feedbacks: [],
 	},
 	slidesSlideshowHeader: {
@@ -126,6 +152,32 @@ module.exports = {
 		steps: [{ down: [{ actionId: 'laser', options: { action: 'toggle' } }], up: [] }],
 		feedbacks: [],
 	},
+	pauseSlideshow: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Pause show`,
+		style: {
+			text: `Pause\nslide show`,
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(64, 0, 0),
+		},
+		steps: [{ down: [{ actionId: 'slideShowPauseResume', options: { action: 'pause' } }], up: [] }],
+		feedbacks: [],
+	},
+	resumeSlideshow: {
+		type: 'button',
+		category: 'Slide show control and feedback',
+		name: `Resume show`,
+		style: {
+			text: `Resume\nslide show`,
+			size: '14',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 52, 0),
+		},
+		steps: [{ down: [{ actionId: 'slideShowPauseResume', options: { action: 'resume' } }], up: [] }],
+		feedbacks: [],
+	},
 	slidesFeedback: {
 		category: 'Slide show control and feedback',
 		name: 'Slide show feedback',
@@ -139,19 +191,19 @@ module.exports = {
 		style: {
 			text: 'Show state:\n$(OSCPoint:state)',
 			size: '14',
-			color: combineRgb(0, 0, 0),
-			bgcolor: combineRgb(0, 200, 0),
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(255, 0, 0),
 		},
 		steps: [],
 		feedbacks: [
 			{
 				feedbackId: 'showState',
 				options: {
-					state: 'slideshow',
+					state: 'edit',
 				},
 				style: {
-					color: combineRgb(255, 255, 255),
-					bgcolor: combineRgb(255, 0, 0),
+					color: combineRgb(0, 0, 0),
+					bgcolor: combineRgb(0, 200, 0),
 				},
 			},
 		],

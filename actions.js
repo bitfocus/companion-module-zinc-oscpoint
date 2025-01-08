@@ -16,6 +16,26 @@ module.exports = function (self) {
 				sendOscMessage('/oscpoint/previous', [])
 			},
 		},
+		nextSection: {
+			name: 'Jump to first slide of next section',
+			options: [],
+			callback: async (event) => {
+				let slideNumber = await self.getVariableValue('nextSectionFirstSlide')
+				self.log('debug', `Going to slide ${slideNumber}`)
+				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }])
+			},
+		},
+		previousSection: {
+			name: 'Jump to first slide of previous section',
+			options: [],
+			callback: async (event) => {
+				let slideNumber = await self.getVariableValue('previousSectionFirstSlide')
+				self.log('debug', `Going to slide ${slideNumber}`)
+				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }])
+			},
+		},
 		goto_slide_number: {
 			name: 'Goto slide number',
 			options: [
