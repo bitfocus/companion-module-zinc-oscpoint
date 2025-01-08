@@ -302,6 +302,29 @@ module.exports = function (self) {
 				])
 			},
 		},
+
+		slideShowPauseResume: {
+			name: 'Pause/resume slide show auto-advance',
+			options: [
+				{
+					id: 'action',
+					type: 'dropdown',
+					label: 'Action',
+					choices: [
+						{ id: 'pause', label: 'Pause' },
+						{ id: 'resume', label: 'Resume' },
+					],
+					default: 'pause',
+				},
+			],
+			callback: async (event) => {
+				if (event.options.action == 'pause') {
+					sendOscMessage('/oscpoint/slideshow/pause', [])
+				} else {
+					sendOscMessage('/oscpoint/slideshow/resume', [])
+				}
+			},
+		},
 		mediaTransport: {
 			name: 'Media play/pause/stop',
 			options: [
