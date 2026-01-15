@@ -45,8 +45,16 @@ const oscListener = {
 	processData: function (oscMsg, self) {
 		//truncate the message arg if it's too long
 		let argLog = oscMsg.args[0].value
-		if (typeof oscMsg.args[0].value === 'string' && oscMsg.args[0].value.length > 100) {
-			argLog = oscMsg.args[0].value.substring(0, 100) + '...'
+		if (typeof oscMsg.args[0].value === 'string' && oscMsg.args[0].value.length > 50) {
+			argLog = oscMsg.args[0].value.substring(0, 50) + '...'
+		}
+		if (oscMsg.address == '/oscpoint/slideshow/notes-utf-8') {
+			const n = Buffer.from(oscMsg.args[0].value).toString('utf8')
+			if (n.length > 50) {
+				argLog = `"${n.substring(0, 50)}..."`
+			} else {
+				argLog = `"${n}"`
+			}
 		}
 
 		self.log('info', `OSC message received: ${oscMsg.address} ${argLog}`)
