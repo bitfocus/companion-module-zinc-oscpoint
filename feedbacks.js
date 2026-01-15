@@ -17,8 +17,9 @@ module.exports = async function (self) {
 					type: 'dropdown',
 					label: 'State',
 					choices: [
-						{ id: 'slideshow', label: 'Slide show' },
 						{ id: 'edit', label: 'Edit' },
+						{ id: 'running', label: 'Slide show - running' },
+						{ id: 'paused', label: 'Slide show - with auto-advance transitions paused.' },
 					],
 					default: 'slideshow',
 				},
