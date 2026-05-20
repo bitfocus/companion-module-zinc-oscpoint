@@ -2,15 +2,14 @@ const { combineRgb } = require('@companion-module/base')
 const imgs = require('../imgs.js')
 
 module.exports = {
-	mediaActionHeader: {
-		category: 'Media control and feedback',
-		name: 'Actions',
-		type: 'text',
-		text: 'Control media playback and bookmarks',
-	},
+	// mediaActionHeader: {
+	//
+	// 	name: 'Actions',
+	// 	type: 'text',
+	// 	text: 'Control media playback and bookmarks',
+	// },
 	playpause: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Play/pause`,
 		style: {
 			text: ` `,
@@ -23,8 +22,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	stopMedia: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Stop`,
 		style: {
 			text: ` `,
@@ -37,8 +35,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	previousBookmark: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Previous bookmark`,
 		style: {
 			text: ` `,
@@ -51,8 +48,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	nextBookmark: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Next bookmark`,
 		style: {
 			text: ` `,
@@ -65,8 +61,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	lastTenSeconds: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Last 10 seconds`,
 		style: {
 			text: `Last 10s`,
@@ -77,15 +72,14 @@ module.exports = {
 		steps: [{ down: [{ actionId: 'mediaGotoTime', options: { type: 'end', posMs: '10000' } }], up: [] }],
 		feedbacks: [],
 	},
-	mediaFeedbackHeader: {
-		category: 'Media control and feedback',
-		name: 'Feedbacks',
-		type: 'text',
-		text: 'Show media state and progress',
-	},
+	// mediaFeedbackHeader: {
+	//
+	// 	name: 'Feedbacks',
+	// 	type: 'text',
+	// 	text: 'Show media state and progress',
+	// },
 	mediaState: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Media state`,
 		style: {
 			text: `Media:\n$(OSCPoint:mediaState)`,
@@ -108,8 +102,7 @@ module.exports = {
 		],
 	},
 	mediaDuration: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Media duration`,
 		style: {
 			text: `Duration:\n$(OSCPoint:mediaDurationTrimmedFormatted)`,
@@ -121,8 +114,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	mediaPosition: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Playhead position`,
 		style: {
 			text: `Position:\n$(OSCPoint:mediaPositionFormatted)`,
@@ -142,8 +134,7 @@ module.exports = {
 		],
 	},
 	mediaRemaining: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Time remaining`,
 		style: {
 			text: `Remain:\n$(OSCPoint:mediaRemainingFormatted)`,
@@ -163,8 +154,7 @@ module.exports = {
 		],
 	},
 	mediaStartEndPoints: {
-		type: 'button',
-		category: 'Media control and feedback',
+		type: 'simple',
 		name: `Start/end points`,
 		style: {
 			text: `In:\n$(OSCPoint:mediaStartPoint)ms\n Out:\n$(OSCPoint:mediaEndPoint)ms`,

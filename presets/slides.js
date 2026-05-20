@@ -2,15 +2,14 @@ const { combineRgb } = require('@companion-module/base')
 const imgs = require('../imgs.js')
 
 module.exports = {
-	slidesActionHeader: {
-		category: 'Slide show control and feedback',
-		name: 'Slide control',
-		type: 'text',
-		text: 'Move though slide show',
-	},
+	// slidesActionHeader: {
+	//
+	// 	name: 'Slide control',
+	// 	type: 'text',
+	// 	text: 'Move though slide show',
+	// },
 	prev: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Previous slide`,
 		style: {
 			text: `⮜`,
@@ -22,8 +21,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	next: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Next slide`,
 		style: {
 			text: '⮞',
@@ -35,8 +33,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	prevSection: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Previous section`,
 		style: {
 			text: `⮜\nSection`,
@@ -48,8 +45,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	nextSection: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Next section`,
 		style: {
 			text: `⮞\nSection`,
@@ -60,15 +56,13 @@ module.exports = {
 		steps: [{ down: [{ actionId: 'nextSection' }], up: [] }],
 		feedbacks: [],
 	},
-	slidesSlideshowHeader: {
-		category: 'Slide show control and feedback',
-		name: 'Slide show controls',
-		type: 'text',
-		text: 'Start, stop and control slide shows',
-	},
+	// slidesSlideshowHeader: {
+	// 	name: 'Slide show controls',
+	// 	type: 'text',
+	// 	text: 'Start, stop and control slide shows',
+	// },
 	startSlideshowFromStart: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Start slide show from start`,
 		style: {
 			text: `Start`,
@@ -82,8 +76,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	startSlideshowFromCurrent: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Start slide show from current slide`,
 		style: {
 			text: `Current`,
@@ -97,8 +90,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	stopSlideshow: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `End slide show`,
 		style: {
 			text: `End`,
@@ -112,8 +104,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	white: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `White screen (toggle)`,
 		style: {
 			text: `White`,
@@ -125,8 +116,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	black: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Black screen (toggle)`,
 		style: {
 			text: `Black`,
@@ -138,8 +128,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	laser: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Laser pointer (toggle)`,
 		style: {
 			text: `Laser pointer`,
@@ -153,8 +142,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	pauseSlideshow: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Pause show`,
 		style: {
 			text: `Pause\nslide show`,
@@ -166,8 +154,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	resumeSlideshow: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Resume show`,
 		style: {
 			text: `Resume\nslide show`,
@@ -178,15 +165,13 @@ module.exports = {
 		steps: [{ down: [{ actionId: 'slideShowPauseResume', options: { action: 'resume' } }], up: [] }],
 		feedbacks: [],
 	},
-	slidesFeedback: {
-		category: 'Slide show control and feedback',
-		name: 'Slide show feedback',
-		type: 'text',
-		text: 'Live slide show status reporting',
-	},
+	// slidesFeedback: {
+	// 	name: 'Slide show feedback',
+	// 	type: 'text',
+	// 	text: 'Live slide show status reporting',
+	// },
 	showState: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Show state`,
 		style: {
 			text: 'Show state:\n$(OSCPoint:state)',
@@ -209,8 +194,7 @@ module.exports = {
 		],
 	},
 	presentationName: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `File name`,
 		style: {
 			text: 'File:\n$(OSCPoint:presentationName)',
@@ -222,8 +206,7 @@ module.exports = {
 		feedbacks: [],
 	},
 	slideNumbers: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Current/total slides`,
 		style: {
 			text: 'Slide\n$(OSCPoint:currentSlide)/$(OSCPoint:slideCount)',
@@ -243,8 +226,7 @@ module.exports = {
 		],
 	},
 	buildNumbers: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Current/total builds on slide`,
 		style: {
 			text: 'Build\n$(OSCPoint:buildPosition)/$(OSCPoint:buildCount)',
@@ -264,8 +246,7 @@ module.exports = {
 		],
 	},
 	notes: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Notes`,
 		style: {
 			text: 'Notes:\n$(OSCPoint:notesSnip)',
@@ -276,15 +257,13 @@ module.exports = {
 		steps: [],
 		feedbacks: [],
 	},
-	slidesMisc: {
-		category: 'Slide show control and feedback',
-		name: 'Miscellaneous',
-		type: 'text',
-		text: ' ',
-	},
+	// slidesMisc: {
+	// 	name: 'Miscellaneous',
+	// 	type: 'text',
+	// 	text: ' ',
+	// },
 	setWallpaper: {
-		type: 'button',
-		category: 'Slide show control and feedback',
+		type: 'simple',
 		name: `Set wallpaper to current slide`,
 		style: {
 			text: 'Set wallpaper',

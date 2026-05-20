@@ -40,17 +40,18 @@ module.exports = function (self) {
 			name: 'Goto slide number',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1,
 					label: 'Slide number',
 					id: 'slideNumber',
-					default: '1',
-					//regex: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
 			callback: async (event) => {
-				let slideNumber = await self.parseVariablesInString(event.options.slideNumber)
-				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				let slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 				if (slideNumber) {
 					sendOscMessage('/oscpoint/goto/slide', [{ type: 'i', value: slideNumber }])
 				}
@@ -82,7 +83,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				let sectionName = await self.parseVariablesInString(event.options.sectionName)
+				let sectionName = event.options.sectionName
 				sendOscMessage('/oscpoint/goto/section', [{ type: 's', value: sectionName }])
 			},
 		},
@@ -90,17 +91,18 @@ module.exports = function (self) {
 			name: 'Hide slide',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1,
 					label: 'Slide number',
 					id: 'slideNumber',
-					default: '1',
-					//: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
 			callback: async (event) => {
-				let slideNumber = await self.parseVariablesInString(event.options.slideNumber)
-				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 				if (slideNumber) {
 					sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: slideNumber }])
 				}
@@ -110,17 +112,18 @@ module.exports = function (self) {
 			name: 'Unhide slide',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1,
 					label: 'Slide number',
 					id: 'slideNumber',
-					default: '1',
-					//regex: Regex.SIGNED_NUMBER,
 					useVariables: true,
 				},
 			],
 			callback: async (event) => {
-				let slideNumber = await self.parseVariablesInString(event.options.slideNumber)
-				slideNumber = sanitiseSlideNumber(slideNumber, event)
+				slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 				if (slideNumber) {
 					sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: slideNumber }])
 				}
@@ -146,17 +149,20 @@ module.exports = function (self) {
 					type: 'textinput',
 					label: 'Section name (case sensitive)',
 					default: 'Default Section',
-					isVisible: (options) => {
+					isVisibleExpression: (options) => {
 						return options.startPosition == 'section'
 					},
 					useVariables: true,
 				},
 				{
 					id: 'slideNumber',
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1,
 					label: 'Slide number',
-					default: '1',
-					isVisible: (options) => {
+					isVisibleExpression: (options) => {
 						return options.startPosition == 'slideNumber'
 					},
 					useVariables: true,
@@ -172,13 +178,13 @@ module.exports = function (self) {
 						sendOscMessage('/oscpoint/slideshow/start/current', [])
 						break
 					case 'slideNumber':
-						slideNumber = sanitiseSlideNumber(await self.parseVariablesInString(event.options.slideNumber), event)
+						slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 						if (slideNumber) {
 							sendOscMessage('/oscpoint/slideshow/start', [{ type: 'i', value: slideNumber }])
 						}
 						break
 					case 'section': {
-						const sectionName = await self.parseVariablesInString(event.options.sectionName)
+						const sectionName = event.options.sectionName
 						sendOscMessage('/oscpoint/slideshow/start/section', [{ type: 's', value: sectionName }])
 						break
 					}
@@ -283,23 +289,29 @@ module.exports = function (self) {
 			name: 'Set desktop wallpaper from current slide',
 			options: [
 				{
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1920,
 					label: 'Image export width (px)',
 					id: 'width',
-					default: '1920',
 					useVariables: true,
 				},
 				{
-					type: 'textinput',
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1080,
 					label: 'Image export height (px)',
 					id: 'height',
-					default: '1080',
 					useVariables: true,
 				},
 			],
 			callback: async (event) => {
-				let width = await self.parseVariablesInString(event.options.width)
-				let height = await self.parseVariablesInString(event.options.height)
+				let width = event.options.width
+				let height = event.options.height
 				//check width is an integer
 				width = parseInt(width)
 				if (isNaN(width)) {
@@ -400,13 +412,15 @@ module.exports = function (self) {
 					default: 'start',
 				},
 				{
-					type: 'textinput',
 					label: 'Milliseconds',
 					id: 'posMs',
-					default: '1',
-					//regex: Regex.NUMBER,
+					type: 'number',
+					asInteger: true,
+					clampValues: true,
+					min: 1,
+					default: 1000,
 					useVariables: true,
-					isVisible: (options) => {
+					isVisibleExpression: (options) => {
 						return options.type != 'percent'
 					},
 				},
@@ -414,10 +428,13 @@ module.exports = function (self) {
 					type: 'textinput',
 					label: 'Percent',
 					id: 'posPercent',
-					default: '50',
-					//regex: Regex.FLOAT,
+					type: 'number',
+					clampValues: true,
+					min: 0,
+					max: 100,
+					default: 50,
 					useVariables: true,
-					isVisible: (options) => {
+					isVisibleExpression: (options) => {
 						return options.type == 'percent'
 					},
 				},
@@ -427,7 +444,7 @@ module.exports = function (self) {
 				let intPosMs = 0
 
 				if (event.options.type != 'percent') {
-					posMs = await self.parseVariablesInString(event.options.posMs)
+					posMs = event.options.posMs
 					console.log('posMs', posMs)
 					intPosMs = parseInt(posMs)
 					if (isNaN(intPosMs)) {
@@ -457,7 +474,7 @@ module.exports = function (self) {
 						sendOscMessage(`/oscpoint/media/goto/position/back`, [{ type: 'i', value: intPosMs }])
 						break
 					case 'percent': {
-						const posPercent = await self.parseVariablesInString(event.options.posPercent)
+						const posPercent = event.options.posPercent
 						let floatPosPercent = parseFloat(posPercent)
 						if (isNaN(floatPosPercent)) {
 							self.log('error', `${event.controlId}: ${event.actionId} - invalid percentage "${posPercent}"`)
@@ -504,7 +521,7 @@ module.exports = function (self) {
 					type: 'static-text',
 					label: 'WARNING! OSCPoint will only respond to the Enable Actions command - all others will  be ignored.',
 					value: '',
-					isVisible: (options) => {
+					isVisibleExpression: (options) => {
 						return options.action == 'disable'
 					},
 				},
@@ -544,7 +561,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				const fileName = await self.parseVariablesInString(event.options.fileName)
+				const fileName = event.options.fileName
 				sendOscMessage(`/oscpoint/files/open`, [{ type: 's', value: fileName }])
 			},
 		},
@@ -561,7 +578,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				const fileName = await self.parseVariablesInString(event.options.fileName)
+				const fileName = event.options.fileName
 				sendOscMessage(`/oscpoint/presentations/activate`, [{ type: 's', value: fileName }])
 			},
 		},
@@ -590,7 +607,7 @@ module.exports = function (self) {
 			],
 			callback: async (event) => {
 				let args = []
-				let fileName = await self.parseVariablesInString(event.options.fileName)
+				let fileName = event.options.fileName
 				if (fileName.length > 0) {
 					fileName = fileName.trim()
 					args.push({ type: 's', value: fileName })
@@ -622,7 +639,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				const path = await self.parseVariablesInString(event.options.folder)
+				const path = event.options.folder
 				sendOscMessage(`/oscpoint/files/setpath`, [{ type: 's', value: path }])
 			},
 		},

@@ -1,20 +1,18 @@
 const { combineRgb } = require('@companion-module/base')
 module.exports = {
-	fileDescHeader: {
-		category: 'File management',
-		name: 'Note: File management features require OSCPoint add-in v2.0.0 or later.',
-		type: 'text',
-		text: `When enabled, OSCPoint will scan a specific folder (the active folder) for .ppt and .pptx files. Use the presets below to navigate through the file list and open the selected file in PowerPoint.`,
-	},
-	fileActionHeader: {
-		category: 'File management',
-		name: 'Set active folder',
-		type: 'text',
-		text: `The active folder is always relative to the user's home directory. For example, setting the active folder to Desktop\\oscpoint will mean OSCPoint will look for PowerPoint presentations in C:\\Users\\[USERNAME]\\Desktop\\oscpoint`,
-	},
+	// fileDescHeader: {
+	// 	type: 'simple',
+	// 	name: 'Note: File management features require OSCPoint add-in v2.0.0 or later.',
+	// 	text: `When enabled, OSCPoint will scan a specific folder (the active folder) for .ppt and .pptx files. Use the presets below to navigate through the file list and open the selected file in PowerPoint.`,
+	// },
+	// fileActionHeader: {
+	// 	type: 'simple',
+	// 	name: 'Set active folder',
+	// 	text: `The active folder is always relative to the user's home directory. For example, setting the active folder to Desktop\\oscpoint will mean OSCPoint will look for PowerPoint presentations in C:\\Users\\[USERNAME]\\Desktop\\oscpoint`,
+	// },
 	setActiveFolder: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Set active folder`,
 		style: {
 			text: `Set active folder`,
@@ -27,15 +25,14 @@ module.exports = {
 		feedbacks: [],
 	},
 
-	fileListNavHeader: {
-		category: 'File management',
-		name: 'File list navigation',
-		type: 'text',
-		text: 'Use these presets to navigate through the file list to select the file to open.',
-	},
+	// fileListNavHeader: {
+	// 	type: 'simple',
+	// 	name: 'File list navigation',
+	// 	text: 'Use these presets to navigate through the file list to select the file to open.',
+	// },
 	plus1: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Next file`,
 		style: {
 			text: `+1`,
@@ -46,8 +43,8 @@ module.exports = {
 		feedbacks: [],
 	},
 	plus10: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Next file`,
 		style: {
 			text: `+10`,
@@ -58,8 +55,8 @@ module.exports = {
 		feedbacks: [],
 	},
 	minus1: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Next file`,
 		style: {
 			text: `-1`,
@@ -70,8 +67,8 @@ module.exports = {
 		feedbacks: [],
 	},
 	minus10: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Next file`,
 		style: {
 			text: `-10`,
@@ -82,8 +79,8 @@ module.exports = {
 		feedbacks: [],
 	},
 	selectedFileName: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Selected file name`,
 		style: {
 			text: `Selected file: $(OSCPoint:activeFolderFileName)`,
@@ -94,8 +91,8 @@ module.exports = {
 		steps: [],
 	},
 	openFile: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Open file`,
 		style: {
 			text: `Open file`,
@@ -107,15 +104,14 @@ module.exports = {
 		steps: [{ down: [{ actionId: 'openFile', options: { fileName: '$(OSCPoint:activeFolderFileName)' } }], up: [] }],
 		feedbacks: [],
 	},
-	fileStatusHeader: {
-		category: 'File management',
-		name: 'Status feedback',
-		type: 'text',
-		text: 'The current status of file management features. Note that file access must be enabled locally via the OSCPoint tab in PowerPoint.',
-	},
+	// fileStatusHeader: {
+	// 	type: 'simple',
+	// 	name: 'Status feedback',
+	// 	text: 'The current status of file management features. Note that file access must be enabled locally via the OSCPoint tab in PowerPoint.',
+	// },
 	fileAccessEnabled: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `File access feedback`,
 		style: {
 			text: `File access:\nDenied`,
@@ -140,8 +136,8 @@ module.exports = {
 		],
 	},
 	activeFolder: {
-		type: 'button',
-		category: 'File management',
+
+		type: 'simple',
 		name: `Active folder`,
 		style: {
 			text: `Active folder:\n$(OSCPoint:activeFolder)`,

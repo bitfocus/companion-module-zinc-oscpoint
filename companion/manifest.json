@@ -1,10 +1,12 @@
 {
+	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
 	"id": "zinc-oscpoint",
 	"name": "OSCPoint",
 	"shortname": "OSCPoint",
 	"description": "OSCPoint is a PowerPoint add-in that allows Open Sound Control (OSC) control of PowerPoint on Windows.",
-	"version": "1.4.0",
+	"version": "2.0.0",
 	"license": "MIT",
+	"type": "connection",
 	"repository": "git+https://github.com/bitfocus/companion-module-zinc-oscpoint.git",
 	"bugs": "https://github.com/bitfocus/companion-module-zinc-oscpoint/issues",
 	"maintainers": [
