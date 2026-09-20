@@ -15,9 +15,9 @@ const textHelper = {
 		}
 
 		for (let i = 0; i < args.length; i++) {
-			if (args[0].type == 's') {
-				self.log('console', `Extracted text: ${args[0].value}`)
-				return args[0].value
+			if (args[i].type == 's') {
+				self.log('console', `Extracted text: ${args[i].value}`)
+				return args[i].value
 			}
 		}
 

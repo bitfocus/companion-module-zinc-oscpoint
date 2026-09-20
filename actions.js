@@ -102,7 +102,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
+				let slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 				if (slideNumber) {
 					sendOscMessage('/oscpoint/slide/hide', [{ type: 'i', value: slideNumber }])
 				}
@@ -123,7 +123,7 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
-				slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
+				let slideNumber = sanitiseSlideNumber(event.options.slideNumber, event)
 				if (slideNumber) {
 					sendOscMessage('/oscpoint/slide/unhide', [{ type: 'i', value: slideNumber }])
 				}
@@ -669,6 +669,11 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
+				// self.files[self.fileIndex] would be undefined here if no file list has been received yet
+				if (self.fileCount == 0) {
+					self.log('debug', 'Cannot change file index, file list is empty')
+					return
+				}
 				switch (event.options.action) {
 					case 'increment_1':
 						self.fileIndex++
@@ -720,6 +725,11 @@ module.exports = function (self) {
 				},
 			],
 			callback: async (event) => {
+				// self.presentations[self.presentationsIndex] would be undefined here if no presentations list has been received yet
+				if (self.presentationsCount == 0) {
+					self.log('debug', 'Cannot change presentation index, presentations list is empty')
+					return
+				}
 				switch (event.options.action) {
 					case 'increment_1':
 						self.presentationsIndex++
@@ -728,7 +738,7 @@ module.exports = function (self) {
 						}
 						break
 					case 'increment_10':
-						self.presentationsIndex + 10
+						self.presentationsIndex = self.presentationsIndex + 10
 						if (self.presentationsIndex > self.presentationsCount - 1) {
 							self.presentationsIndex = 0
 						}
@@ -758,9 +768,8 @@ module.exports = function (self) {
 	})
 
 	const sendOscMessage = (path, args) => {
-		//self.log('debug', `Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}`);
-		console.log(
-			'info',
+		self.log(
+			'debug',
 			`Sending OSC ${path} ${args.length > 0 ? args[0].value : ''}${args.length > 1 ? args[1].value : ''}`
 		)
 		self.oscSend(self.config.remotehost, self.config.remoteport, path, args)

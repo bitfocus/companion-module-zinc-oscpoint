@@ -21,7 +21,7 @@ module.exports = async function (self) {
 						{ id: 'running', label: 'Slide show - running' },
 						{ id: 'paused', label: 'Slide show - with auto-advance transitions paused.' },
 					],
-					default: 'slideshow',
+					default: 'running',
 				},
 			],
 			callback: (feedback) => {
@@ -108,6 +108,8 @@ module.exports = async function (self) {
 				if (feedback.options.type == 'slide') {
 					val = (self.getVariableValue('currentSlide') / self.getVariableValue('slideCount')) * 100
 				}
+				// buildCount/slideCount default to the string '-' before the first OSC update, making val NaN
+				if (!isFinite(val)) val = 0
 				const options = {
 					width: feedback.image.width,
 					height: feedback.image.height,
@@ -146,6 +148,8 @@ module.exports = async function (self) {
 			],
 			callback: (feedback) => {
 				let posPercent = (self.getVariableValue('mediaPosition') / self.getVariableValue('mediaDurationTrimmed')) * 100
+				// mediaDurationTrimmed defaults to 0 before media data arrives, making posPercent NaN/Infinity
+				if (!isFinite(posPercent)) posPercent = 0
 				let remainingSeconds = self.getVariableValue('mediaDurationTrimmed') - self.getVariableValue('mediaPosition')
 				let colors
 				let val
@@ -213,7 +217,8 @@ module.exports = async function (self) {
 
 				self.log('debug', `Folder progress bar: ${selectedPortion} / ${totalPortion}`)
 
-				let portion = selectedPortion / totalPortion
+				// totalPortion is 0 when the folder has only one file, which would make this a division by zero
+				let portion = totalPortion > 0 ? selectedPortion / totalPortion : 0
 				self.log('debug', `Folder progress bar decimal: ${portion}`)
 
 				let preDot = blankSpace * portion
